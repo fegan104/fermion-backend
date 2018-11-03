@@ -1,7 +1,5 @@
 package com.fermion.data.model.response;
 
-import com.fermion.data.model.Timeslot;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -11,11 +9,10 @@ import java.util.List;
  */
 public class DayResponse extends ApiResponse {
     public String day;//dd-MM-yyyy
-    List<Timeslot> timeslots;
+    List<TimeslotResponse> timeslots;
 
 
-    public DayResponse(LocalDate day, List<Timeslot> timeslots) {
-        super(200);
+    public DayResponse(LocalDate day, List<TimeslotResponse> timeslots) {
         this.day = DateTimeFormatter.ofPattern("dd-MM-yyyy").format(day);
         this.timeslots = timeslots;
     }
@@ -24,7 +21,7 @@ public class DayResponse extends ApiResponse {
         return day;
     }
 
-    public List<Timeslot> getTimeslots() {
+    public List<TimeslotResponse> getTimeslots() {
         return timeslots;
     }
 }

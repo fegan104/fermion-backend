@@ -14,10 +14,10 @@ import java.util.Map;
 /**
  * Created by @author frankegan on 10/31/18.
  */
-public class AddCalendarLambda implements RequestHandler<Map<String, Object>, String> {
+public class AddCalendarLambda implements RequestHandler<Map<String, Object>, CalendarResponse> {
 
     @Override
-    public String handleRequest(Map<String, Object> input, Context context) {
+    public CalendarResponse handleRequest(Map<String, Object> input, Context context) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         for (Map.Entry e : input.entrySet()) {
             context.getLogger().log(e.getKey() + ": " + e.getValue() + "\n");
@@ -32,11 +32,13 @@ public class AddCalendarLambda implements RequestHandler<Map<String, Object>, St
                     (int) input.get("duration")
             );
             CalendarResponse calRes = new CalendarResponse(calendar);
-            return gson.toJson(calRes);
+            context.getLogger().log("Timeslots for " + calRes.getId());
+            context.getLogger().log(calRes.getDays().toString());
+            return calRes;
         } catch (Exception e) {
             context.getLogger().log(e.getMessage());
             CalendarResponse calRes = new CalendarResponse(new Calendar(LocalDate.now(), LocalDate.now(), 0, 0, 1));
-            return gson.toJson(calRes);
+            return calRes;
         }
     }
 }

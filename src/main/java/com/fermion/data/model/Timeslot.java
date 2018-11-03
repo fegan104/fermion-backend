@@ -30,11 +30,15 @@ public class Timeslot {
         return id;
     }
 
+    public LocalDate getDay() {
+        return localDate;
+    }
+
     public Meeting getMeeting() {
         return meeting;
     }
 
-    public LocalDate getDay() {
+    public LocalDate getLocalDate() {
         return localDate;
     }
 

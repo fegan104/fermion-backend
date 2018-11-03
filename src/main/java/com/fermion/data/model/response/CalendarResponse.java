@@ -18,13 +18,15 @@ public class CalendarResponse extends ApiResponse {
 
 
     public CalendarResponse(Calendar calendar) {
-        super(200);
         this.id = calendar.getId();
         try {
             this.days = calendar.getTimeslots()
                     .entrySet()
                     .stream()
-                    .map(e -> new DayResponse(e.getKey(), e.getValue()))
+                    .map(e -> new DayResponse(e.getKey(), e.getValue()
+                            .stream()
+                            .map(TimeslotResponse::new)
+                            .collect(Collectors.toList())))
                     .collect(Collectors.toList());
         } catch (Exception e) {
             e.printStackTrace();
@@ -39,19 +41,39 @@ public class CalendarResponse extends ApiResponse {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public List<DayResponse> getDays() {
         return days;
+    }
+
+    public void setDays(List<DayResponse> days) {
+        this.days = days;
     }
 
     public int getStartHour() {
         return startHour;
     }
 
+    public void setStartHour(int startHour) {
+        this.startHour = startHour;
+    }
+
     public int getEndHour() {
         return endHour;
     }
 
+    public void setEndHour(int endHour) {
+        this.endHour = endHour;
+    }
+
     public int getDuration() {
         return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 }
