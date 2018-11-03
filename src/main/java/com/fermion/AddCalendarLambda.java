@@ -6,26 +6,36 @@ import com.fermion.data.model.Calendar;
 import com.fermion.data.model.response.CalendarResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 /**
  * Created by @author frankegan on 10/31/18.
  */
-public class AddCalendarLambda implements RequestHandler<String, String> {
+public class AddCalendarLambda implements RequestHandler<Map<String, Object>, String> {
 
     @Override
-    public String handleRequest(String input, Context context) {
-        context.getLogger().log("reqBody: " + input);
+    public String handleRequest(Map<String, Object> input, Context context) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        for (Map.Entry e : input.entrySet()) {
+            context.getLogger().log(e.getKey() + ": " + e.getValue() + "\n");
+        }
         Gson gson = new GsonBuilder().create();
         try {
-            Calendar calendar = gson.fromJson(input, Calendar.class);
+            Calendar calendar = new Calendar(
+                    LocalDate.parse((String) input.get("startDate"), dtf),
+                    LocalDate.parse((String) input.get("endDate"), dtf),
+                    (int) input.get("startHour"),
+                    (int) input.get("endHour"),
+                    (int) input.get("duration")
+            );
             CalendarResponse calRes = new CalendarResponse(calendar);
             return gson.toJson(calRes);
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             context.getLogger().log(e.getMessage());
-            CalendarResponse calRes = new CalendarResponse(new Calendar("", new ArrayList<>(), 0, 0, 0));
+            CalendarResponse calRes = new CalendarResponse(new Calendar(LocalDate.now(), LocalDate.now(), 0, 0, 1));
             return gson.toJson(calRes);
         }
     }

@@ -2,6 +2,7 @@ package com.fermion.data.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.UUID;
 
 /**
  * Created by @author frankegan on 10/30/18.
@@ -12,6 +13,10 @@ public class Timeslot {
     private LocalDate localDate;
     private LocalTime startTime;
     private LocalTime endTime;
+
+    public Timeslot(Meeting meeting, LocalDate localDate, LocalTime startTime, LocalTime endTime) {
+        this(UUID.randomUUID().toString(), meeting, localDate, startTime, endTime);
+    }
 
     public Timeslot(String id, Meeting meeting, LocalDate localDate, LocalTime startTime, LocalTime endTime) {
         this.id = id;
