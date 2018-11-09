@@ -2,6 +2,7 @@ package com.fermion.data.database;
 
 import com.fermion.data.model.Calendar;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.Optional;
  */
 public class JdbcCalendarDao implements CalendarDataSource {
 
-	java.sql.Connection conn;
+	Connection conn;
 
 	public JdbcCalendarDao() {
     	try  {
