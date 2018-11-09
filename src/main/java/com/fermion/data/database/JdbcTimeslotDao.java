@@ -66,7 +66,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
             while (resultSet.next()) {
                 Timeslot t = generateTimeslot(resultSet);
                 resultSet.close();
-                return false;
+                return Optional.of(false);
             }
 
             ps = conn.prepareStatement("INSERT INTO slots (calId,startTime,dayOf,dayOfWeek,slotId) values(?,?,?,?,?);");
@@ -76,10 +76,11 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
             ps.setString(4, "Day Of Week"); //TODO unsure how to get that
             ps.setString(5, timeslot.getId());
             ps.execute();
-            return true;
+            return Optional.of(true);
 
         } catch (Exception e) {
-            throw new Exception("Failed to insert constant: " + e.getMessage());
+        	e.printStackTrace();
+            return Optional.empty();
         }
 
     }
@@ -91,7 +92,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
     	for (Timeslot t : timeslots) {
     		if (insert(t).get()) success = false; //if a timeslot breaks, change the return value to false
     	}
-        return success;
+        return Optional.of(success);
     }
 
     @Override
@@ -112,7 +113,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
     private Timeslot generateTimeslot(ResultSet resultSet) throws Exception {
         String calId  = resultSet.getString("calId");
         Time startTime = resultSet.getTime("startTime");
-        Date date  = resultSet.getDate("dayOf");		//TODO convert this date and time to localDate and localTime
+        Date date  = resultSet.getDate("dayOf");
         String calName  = resultSet.getString("calName");
         String dayOfWeek = resultSet.getString("dayOfWeek");
         String slotId = resultSet.getString("slotId");
