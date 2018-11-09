@@ -22,6 +22,7 @@ public class Calendar {
     private LocalTime endHour;
     private int duration;
 
+    //Constructor used when creating a calendar from scratch
     public Calendar(
             String name,
             LocalDate startDate,
@@ -40,6 +41,25 @@ public class Calendar {
         this.timeslots = fillInTimeslots().stream().collect(groupingBy(Timeslot::getDay));
     }
 
+    //Constructor used when loading a calendar from RDS
+    public Calendar(
+    	    String id,
+    	    String ownerName,
+    	    String calName,
+    	    int startHr,
+    	    int endHr,
+    	    int duration
+    ) {
+        this.id = id;
+        this.startHour = LocalTime.of(startHr, 0);
+        this.endHour = LocalTime.of(endHr, 0);
+        this.duration = duration;
+        this.startDay = null; //TODO
+        this.endDay = null; //TODO 
+        this.timeslots= null; //need to fill in timeslots after the basic calendar is created
+    }
+
+    
     public String getId() {
         return id;
     }
@@ -76,7 +96,6 @@ public class Calendar {
                         .withMinute(startHour.getMinute());
                 i += 2 * slotsPerDay;
             }
-            if(i > range) break;
             LocalDateTime next = index.plusMinutes(duration);
             timeslots.add(new Timeslot(
                     null,
