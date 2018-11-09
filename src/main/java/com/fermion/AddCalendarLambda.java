@@ -3,42 +3,43 @@ package com.fermion;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fermion.data.model.Calendar;
-import com.fermion.data.model.response.CalendarResponse;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fermion.data.model.response.ApiGatewayResponse;
+import com.fermion.data.model.response.CalendarResponseData;
+import com.google.gson.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
  * Created by @author frankegan on 10/31/18.
  */
-public class AddCalendarLambda implements RequestHandler<Map<String, Object>, CalendarResponse> {
+public class AddCalendarLambda implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
 
     @Override
-    public CalendarResponse handleRequest(Map<String, Object> input, Context context) {
+    public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         for (Map.Entry e : input.entrySet()) {
             context.getLogger().log(e.getKey() + ": " + e.getValue() + "\n");
         }
         Gson gson = new GsonBuilder().create();
         try {
+            JsonObject body = new JsonParser().parse((String) input.get("body")).getAsJsonObject();
             Calendar calendar = new Calendar(
-                    LocalDate.parse((String) input.get("startDate"), dtf),
-                    LocalDate.parse((String) input.get("endDate"), dtf),
-                    (int) input.get("startHour"),
-                    (int) input.get("endHour"),
-                    (int) input.get("duration")
+                    LocalDate.parse(body.get("startDate").getAsString(), dtf),
+                    LocalDate.parse(body.get("endDate").getAsString(), dtf),
+                    body.get("startHour").getAsInt(),
+                    body.get("endHour").getAsInt(),
+                    body.get("duration").getAsInt()
             );
-            CalendarResponse calRes = new CalendarResponse(calendar);
-            context.getLogger().log("Timeslots for " + calRes.getId());
-            context.getLogger().log(calRes.getDays().toString());
-            return calRes;
+            CalendarResponseData calRes = new CalendarResponseData(calendar);
+            context.getLogger().log("Created" + calRes.getId());
+            return new ApiGatewayResponse(201, gson.toJson(calRes));
         } catch (Exception e) {
-            context.getLogger().log(e.getMessage());
-            CalendarResponse calRes = new CalendarResponse(new Calendar(LocalDate.now(), LocalDate.now(), 0, 0, 1));
-            return calRes;
+            context.getLogger().log(e.toString());
+            Arrays.asList(e.getStackTrace()).forEach(it -> context.getLogger().log(it.toString()));
+            return new ApiGatewayResponse(400, gson.toJson(e.toString()));
         }
     }
 }

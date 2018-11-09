@@ -1,2 +1,3 @@
 rootProject.name = 'fermion-backend'
+include 'getallcalendars'
 

@@ -1,7 +1,7 @@
 package com.fermion.model.response;
 
 import com.fermion.data.model.Calendar;
-import com.fermion.data.model.response.CalendarResponse;
+import com.fermion.data.model.response.CalendarResponseData;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -17,16 +17,16 @@ public class CalendarResponseTest {
     @Test
     public void testMake(){
         Calendar calendar = new Calendar(
-                LocalDate.of(2018, 11, 3),
                 LocalDate.of(2018, 11, 6),
+                LocalDate.of(2018, 11, 10),
                 12,
                 13,
                 20);
         calendar.getTimeslots().forEach((day, timeslots) -> System.out.println(day.toString()));
-        CalendarResponse res = new CalendarResponse(calendar);
+        CalendarResponseData res = new CalendarResponseData(calendar);
         res.days.forEach(dayResponse -> System.out.println(dayResponse.day));
-        assertEquals(2, res.getDays().size());
-        assertEquals(6, res.getDays()
+        assertEquals(4, res.getDays().size());
+        assertEquals(12, res.getDays()
                 .stream()
                 .flatMap(dayResponse -> dayResponse.getTimeslots().stream())
                 .collect(Collectors.toList())

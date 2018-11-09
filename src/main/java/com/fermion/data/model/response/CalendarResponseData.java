@@ -9,23 +9,23 @@ import java.util.stream.Collectors;
 /**
  * Created by @author frankegan on 10/31/18.
  */
-public class CalendarResponse extends ApiResponse {
+public class CalendarResponseData extends ResponseData {
     String id;
-    public List<DayResponse> days;
+    public List<DayResponseData> days;
     int startHour;
     int endHour;
     int duration;
 
 
-    public CalendarResponse(Calendar calendar) {
+    public CalendarResponseData(Calendar calendar) {
         this.id = calendar.getId();
         try {
             this.days = calendar.getTimeslots()
                     .entrySet()
                     .stream()
-                    .map(e -> new DayResponse(e.getKey(), e.getValue()
+                    .map(e -> new DayResponseData(e.getKey(), e.getValue()
                             .stream()
-                            .map(TimeslotResponse::new)
+                            .map(TimeslotResponseData::new)
                             .collect(Collectors.toList())))
                     .collect(Collectors.toList());
         } catch (Exception e) {
@@ -45,11 +45,11 @@ public class CalendarResponse extends ApiResponse {
         this.id = id;
     }
 
-    public List<DayResponse> getDays() {
+    public List<DayResponseData> getDays() {
         return days;
     }
 
-    public void setDays(List<DayResponse> days) {
+    public void setDays(List<DayResponseData> days) {
         this.days = days;
     }
 

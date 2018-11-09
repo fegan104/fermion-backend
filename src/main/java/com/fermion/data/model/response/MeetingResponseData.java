@@ -7,20 +7,20 @@ import javax.annotation.Nullable;
 /**
  * Created by @author frankegan on 10/31/18.
  */
-public class MeetingResponse extends ApiResponse {
+public class MeetingResponseData extends ResponseData {
     String id;
     String guest;
     String location;
 
-    public MeetingResponse(Meeting meeting) {
+    public MeetingResponseData(Meeting meeting) {
         this.id = meeting.getId();
         this.guest = meeting.getGuest();
         this.location = meeting.getLocation();
     }
 
-    @Nullable public static MeetingResponse fromMeeting(@Nullable Meeting meeting){
+    @Nullable public static MeetingResponseData fromMeeting(@Nullable Meeting meeting){
         if (meeting != null){
-            return new MeetingResponse(meeting);
+            return new MeetingResponseData(meeting);
         }
         return null;
     }

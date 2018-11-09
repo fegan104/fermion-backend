@@ -7,12 +7,12 @@ import java.util.List;
 /**
  * Created by @author frankegan on 10/31/18.
  */
-public class DayResponse extends ApiResponse {
+public class DayResponseData extends ResponseData {
     public String day;//dd-MM-yyyy
-    List<TimeslotResponse> timeslots;
+    List<TimeslotResponseData> timeslots;
 
 
-    public DayResponse(LocalDate day, List<TimeslotResponse> timeslots) {
+    public DayResponseData(LocalDate day, List<TimeslotResponseData> timeslots) {
         this.day = DateTimeFormatter.ofPattern("dd-MM-yyyy").format(day);
         this.timeslots = timeslots;
     }
@@ -21,7 +21,7 @@ public class DayResponse extends ApiResponse {
         return day;
     }
 
-    public List<TimeslotResponse> getTimeslots() {
+    public List<TimeslotResponseData> getTimeslots() {
         return timeslots;
     }
 }

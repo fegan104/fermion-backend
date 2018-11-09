@@ -7,26 +7,26 @@ import java.time.format.DateTimeFormatter;
 /**
  * Created by @author frankegan on 10/31/18.
  */
-public class TimeslotResponse extends ApiResponse {
+public class TimeslotResponseData extends ResponseData {
     String id;
     String day;// dd-MM-yyyy
-    MeetingResponse meeting;
+    MeetingResponseData meeting;
     String startTime; //hh:mm
     String endTime; //hh:mm
 
-    public TimeslotResponse(Timeslot timeslot) {
+    public TimeslotResponseData(Timeslot timeslot) {
         this(timeslot.getId(),
                 timeslot.getDay().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                MeetingResponse.fromMeeting(timeslot.getMeeting()),
+                MeetingResponseData.fromMeeting(timeslot.getMeeting()),
                 timeslot.getStartTime().format(DateTimeFormatter.ofPattern("hh:mm")),
                 timeslot.getEndTime().format(DateTimeFormatter.ofPattern("hh:mm"))
         );
     }
 
-    public TimeslotResponse(
+    public TimeslotResponseData(
             String id,
             String day,
-            MeetingResponse meeting,
+            MeetingResponseData meeting,
             String startTime,
             String endTime
     ) {
@@ -53,11 +53,11 @@ public class TimeslotResponse extends ApiResponse {
         this.day = day;
     }
 
-    public MeetingResponse getMeeting() {
+    public MeetingResponseData getMeeting() {
         return meeting;
     }
 
-    public void setMeeting(MeetingResponse meeting) {
+    public void setMeeting(MeetingResponseData meeting) {
         this.meeting = meeting;
     }
 

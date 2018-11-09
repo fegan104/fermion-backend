@@ -73,6 +73,7 @@ public class Calendar {
                         .withMinute(startHour.getMinute());
                 i += 2 * slotsPerDay;
             }
+            if(i > range) break;
             LocalDateTime next = index.plusMinutes(duration);
             timeslots.add(new Timeslot(
                     null,
