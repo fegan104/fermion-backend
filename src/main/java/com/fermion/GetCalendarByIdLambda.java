@@ -9,20 +9,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Created by @author frankegan on 11/6/18.
+ * Created by @author frankegan on 11/9/18.
  */
-public class GetAllCalendarsLambda implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
+public class GetCalendarByIdLambda implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
         Gson gson = new GsonBuilder().create();
         CalendarResponseData calRes = new CalendarResponseData(new Calendar(LocalDate.now(), LocalDate.now(), 0, 0, 1));
-        List<CalendarResponseData> responseData = new ArrayList<>();
-        responseData.add(calRes);
-        return new ApiGatewayResponse(200, gson.toJson(responseData));
+        return new ApiGatewayResponse(200, gson.toJson(calRes));
     }
 }
