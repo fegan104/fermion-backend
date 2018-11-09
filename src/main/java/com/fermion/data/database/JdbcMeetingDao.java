@@ -6,6 +6,9 @@ import com.fermion.data.model.Timeslot;
 import java.util.List;
 import java.util.Optional;
 
+//SQL Meeting has calId, startTime, dayIf, nameMeet, and location.
+//Java Meeting has ID, guest, location
+
 /**
  * Created by @author frankegan on 10/31/18.
  */
