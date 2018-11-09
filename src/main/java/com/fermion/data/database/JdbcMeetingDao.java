@@ -1,7 +1,6 @@
 package com.fermion.data.database;
 
 import com.fermion.data.model.Meeting;
-import com.fermion.data.model.Timeslot;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +10,7 @@ import java.util.Optional;
  */
 public class JdbcMeetingDao implements MeetingDataSource {
     @Override
-    public Optional<List<Meeting>> getByTimeslot(Timeslot timeslot) {
+    public Optional<List<Meeting>> getByCalendar(String calendarId) {
         return Optional.empty();
     }
 

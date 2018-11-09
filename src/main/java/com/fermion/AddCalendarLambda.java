@@ -27,6 +27,7 @@ public class AddCalendarLambda implements RequestHandler<Map<String, Object>, Ap
         try {
             JsonObject body = new JsonParser().parse((String) input.get("body")).getAsJsonObject();
             Calendar calendar = new Calendar(
+                    body.get("name").getAsString(),
                     LocalDate.parse(body.get("startDate").getAsString(), dtf),
                     LocalDate.parse(body.get("endDate").getAsString(), dtf),
                     body.get("startHour").getAsInt(),

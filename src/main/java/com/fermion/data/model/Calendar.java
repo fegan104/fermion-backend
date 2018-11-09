@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.groupingBy;
  */
 public class Calendar {
     private String id;
+    private String name;
     private Map<LocalDate, List<Timeslot>> timeslots;
     private LocalDate startDay;
     private LocalDate endDay;
@@ -22,6 +23,7 @@ public class Calendar {
     private int duration;
 
     public Calendar(
+            String name,
             LocalDate startDate,
             LocalDate endDate,
             int startHour,
@@ -29,6 +31,7 @@ public class Calendar {
             int duration
     ) {
         this.id = UUID.randomUUID().toString();
+        this.name = name;
         this.startHour = LocalTime.of(startHour, 0);
         this.endHour = LocalTime.of(endHour, 0);
         this.duration = duration;
@@ -88,6 +91,10 @@ public class Calendar {
             }
         }
         return timeslots;
+    }
+
+    public String getName() {
+        return name;
     }
 
     private int getTimeslotsBetween(LocalDate startDay, LocalDate endDay) {

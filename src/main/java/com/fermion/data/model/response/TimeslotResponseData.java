@@ -8,28 +8,32 @@ import java.time.format.DateTimeFormatter;
  * Created by @author frankegan on 10/31/18.
  */
 public class TimeslotResponseData extends ResponseData {
+    String calendarId;
     String id;
     String day;// dd-MM-yyyy
     MeetingResponseData meeting;
     String startTime; //hh:mm
     String endTime; //hh:mm
 
-    public TimeslotResponseData(Timeslot timeslot) {
-        this(timeslot.getId(),
+    public TimeslotResponseData(String calendarId, Timeslot timeslot) {
+        this(calendarId,
+                timeslot.getId(),
                 timeslot.getDay().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                MeetingResponseData.fromMeeting(timeslot.getMeeting()),
+                MeetingResponseData.fromMeeting(calendarId, timeslot.getMeeting()),
                 timeslot.getStartTime().format(DateTimeFormatter.ofPattern("hh:mm")),
                 timeslot.getEndTime().format(DateTimeFormatter.ofPattern("hh:mm"))
         );
     }
 
     public TimeslotResponseData(
+            String calendarId,
             String id,
             String day,
             MeetingResponseData meeting,
             String startTime,
             String endTime
     ) {
+        this.calendarId = calendarId;
         this.id = id;
         this.day = day;
         this.meeting = meeting;

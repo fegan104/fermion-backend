@@ -25,7 +25,7 @@ public class CalendarResponseData extends ResponseData {
                     .stream()
                     .map(e -> new DayResponseData(e.getKey(), e.getValue()
                             .stream()
-                            .map(TimeslotResponseData::new)
+                            .map(it -> new TimeslotResponseData(calendar.getId(), it))
                             .collect(Collectors.toList())))
                     .collect(Collectors.toList());
         } catch (Exception e) {

@@ -18,7 +18,7 @@ public class GetCalendarByIdLambda implements RequestHandler<Map<String, Object>
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
         Gson gson = new GsonBuilder().create();
-        CalendarResponseData calRes = new CalendarResponseData(new Calendar(LocalDate.now(), LocalDate.now(), 0, 0, 1));
+        CalendarResponseData calRes = new CalendarResponseData(new Calendar("", LocalDate.now(), LocalDate.now(), 0, 0, 1));
         return new ApiGatewayResponse(200, gson.toJson(calRes));
     }
 }
