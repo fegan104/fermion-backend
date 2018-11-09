@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by @author frankegan on 11/9/18.
  */
-public class GetMeetingLambda implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
+public class GetDayLambda implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
         return null;
