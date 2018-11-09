@@ -2,8 +2,6 @@ package com.fermion.data.database;
 
 import com.fermion.data.model.Calendar;
 
-import edu.wpi.cs.heineman.model.Constant;
-
 import java.time.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,9 +9,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-//sel, upd, ins, del***
-
 
 /**
  * Created by @author frankegan on 10/31/18.
@@ -42,13 +37,18 @@ public class JdbcCalendarDao implements CalendarDataSource {
                 cal = generateCalendar(resultSet);
             }
             
-            /*
-            SELECT * FROM calendar
-            JOIN timeslot ON calendar.id = timeslot.calendar_id
-            JOIN meeting ON calendar.id = meeting.calendar_id
-            */
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM calendars WHERE id=?;");
+            //populate the meetings and timeslots
+            PreparedStatement ps2 = conn.prepareStatement(
+            		"SELECT * FROM calendars "
+            		+ "LEFT JOIN slots ON " + id + " = slots.calId "
+            		+ "LEFT JOIN meetings ON " + id + " = meetings.calId");
+            //returns a set of mega-rows that have some combo of calendar, timeslot and meeting output
+            resultSet = ps.executeQuery();
             
+            while (resultSet.next()) {
+                //TODO new function to add each row to the output
+            	populateSlot(resultSet, cal);
+            }
             
             resultSet.close();
             ps.close();
@@ -58,8 +58,6 @@ public class JdbcCalendarDao implements CalendarDataSource {
             }
             
             return Optional.of(cal);
-            //TODO this will just return the calendar itself, not containing timeslots. We still need to fill in the timeslots.
-            //It might be best to do so in the "load calendar" lambda function, because the timeslotDAO will need to be called.
 
         } catch (Exception e) {
         	e.printStackTrace();
@@ -68,7 +66,8 @@ public class JdbcCalendarDao implements CalendarDataSource {
 
     }
 
-    @Override
+
+	@Override
     public Optional<List<Calendar>> getAll() {
         try {
         	List<Calendar> list = new ArrayList<Calendar>(); //I arbitrarily picked arraylist, we can use something else
@@ -163,6 +162,13 @@ public class JdbcCalendarDao implements CalendarDataSource {
         return cal;
     }
 
+    private void populateSlot(ResultSet resultSet, Calendar cal) {
+    	
+		
+	}
+
+    
+    
 }
 
 
