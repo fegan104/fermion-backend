@@ -18,13 +18,30 @@ public class DayResponseData extends ResponseData {
                            List<MeetingResponseData> meetings) {
         this.day = DateTimeFormatter.ofPattern("dd-MM-yyyy").format(day);
         this.timeslots = timeslots;
+        this.meetings = meetings;
     }
 
     public String getDay() {
         return day;
     }
 
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public void setTimeslots(List<TimeslotResponseData> timeslots) {
+        this.timeslots = timeslots;
+    }
+
+    public void setMeetings(List<MeetingResponseData> meetings) {
+        this.meetings = meetings;
+    }
+
     public List<TimeslotResponseData> getTimeslots() {
         return timeslots;
+    }
+
+    public List<MeetingResponseData> getMeetings() {
+        return meetings;
     }
 }

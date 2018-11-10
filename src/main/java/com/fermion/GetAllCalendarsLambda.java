@@ -20,8 +20,13 @@ public class GetAllCalendarsLambda implements RequestHandler<Map<String, Object>
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
         Gson gson = new GsonBuilder().create();
-        CalendarResponseData calRes = new CalendarResponseData(new Calendar("", LocalDate.now(), LocalDate.now(), 0, 0, 1));
+        CalendarResponseData calRes = new CalendarResponseData(new Calendar(
+                "",
+                LocalDate.of(2018, 11, 3),
+                LocalDate.of(2018, 11, 6),
+                12, 13, 20));
         List<CalendarResponseData> responseData = new ArrayList<>();
+
         responseData.add(calRes);
         return new ApiGatewayResponse(200, gson.toJson(responseData));
     }
