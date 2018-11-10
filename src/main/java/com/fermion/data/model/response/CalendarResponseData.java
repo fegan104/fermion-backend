@@ -12,9 +12,6 @@ import java.util.stream.Collectors;
 public class CalendarResponseData extends ResponseData {
     String id;
     public List<DayResponseData> days;
-    private int startHour;
-    private int endHour;
-    private int duration;
 
 
     public CalendarResponseData(Calendar calendar) {
@@ -28,7 +25,8 @@ public class CalendarResponseData extends ResponseData {
                             e.getValue().stream()
                                     .map(TimeslotResponseData::new)
                                     .collect(Collectors.toList()),
-                            calendar.getMeetings().get(e.getKey()).stream()
+                            calendar.getMeetings().getOrDefault(e.getKey(), new ArrayList<>())
+                                    .stream()
                                     .map(MeetingResponseData::new)
                                     .collect(Collectors.toList()))
                     ).collect(Collectors.toList());
