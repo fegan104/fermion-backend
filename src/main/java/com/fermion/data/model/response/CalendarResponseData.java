@@ -11,11 +11,13 @@ import java.util.stream.Collectors;
  */
 public class CalendarResponseData extends ResponseData {
     String id;
+    String name;
     public List<DayResponseData> days;
 
 
     public CalendarResponseData(Calendar calendar) {
         this.id = calendar.getId();
+        this.name = calendar.getName();
         try {
 
             this.days = calendar.getTimeslots()

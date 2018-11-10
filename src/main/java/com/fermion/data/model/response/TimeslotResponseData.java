@@ -10,15 +10,15 @@ import java.time.format.DateTimeFormatter;
 public class TimeslotResponseData extends ResponseData {
     String id;
     String day;// dd-MM-yyyy
-    String startTime; //hh:mm
-    String endTime; //hh:mm
+    String startTime; //HH:mm
+    String endTime; //HH:mm
 
     public TimeslotResponseData(Timeslot timeslot) {
         this(
                 timeslot.getId(),
                 timeslot.getDay().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                timeslot.getStartTime().format(DateTimeFormatter.ofPattern("hh:mm")),
-                timeslot.getEndTime().format(DateTimeFormatter.ofPattern("hh:mm"))
+                timeslot.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                timeslot.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"))
         );
     }
 

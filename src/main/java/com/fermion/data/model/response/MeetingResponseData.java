@@ -15,8 +15,8 @@ public class MeetingResponseData extends ResponseData {
     String location;
 
     public MeetingResponseData(Meeting meeting) {
-        this.startTime = meeting.getStartTime().format(DateTimeFormatter.ofPattern("hh:mm"));
-        this.endTime = meeting.getEndTime().format(DateTimeFormatter.ofPattern("hh:mm"));
+        this.startTime = meeting.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+        this.endTime = meeting.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"));
         this.day = meeting.getDay().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         this.guest = meeting.getGuest();
         this.location = meeting.getLocation();
