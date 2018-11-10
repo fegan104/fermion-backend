@@ -10,9 +10,12 @@ import java.util.List;
 public class DayResponseData extends ResponseData {
     public String day;//dd-MM-yyyy
     List<TimeslotResponseData> timeslots;
+    List<MeetingResponseData> meetings;
 
 
-    public DayResponseData(LocalDate day, List<TimeslotResponseData> timeslots) {
+    public DayResponseData(LocalDate day,
+                           List<TimeslotResponseData> timeslots,
+                           List<MeetingResponseData> meetings) {
         this.day = DateTimeFormatter.ofPattern("dd-MM-yyyy").format(day);
         this.timeslots = timeslots;
     }

@@ -2,10 +2,7 @@ package com.fermion.data.model;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -16,6 +13,7 @@ public class Calendar {
     private String id;
     private String name;
     private Map<LocalDate, List<Timeslot>> timeslots;
+    private Map<LocalDate, List<Meeting>> meetings;
     private LocalDate startDay;
     private LocalDate endDay;
     private LocalTime startHour;
@@ -39,27 +37,22 @@ public class Calendar {
         this.startDay = startDate;
         this.endDay = endDate;
         this.timeslots = fillInTimeslots().stream().collect(groupingBy(Timeslot::getDay));
+        this.meetings = new HashMap<>();
     }
 
     //Constructor used when loading a calendar from RDS
     public Calendar(
-    	    String id,
-    	    String ownerName,
-    	    String calName,
-    	    int startHr,
-    	    int endHr,
-    	    int duration
+            String id,
+            String name,
+            Map<LocalDate, List<Timeslot>> timeslots,
+            Map<LocalDate, List<Meeting>> meetings
     ) {
         this.id = id;
-        this.startHour = LocalTime.of(startHr, 0);
-        this.endHour = LocalTime.of(endHr, 0);
-        this.duration = duration;
-        this.startDay = null; //TODO
-        this.endDay = null; //TODO 
-        this.timeslots= null; //need to fill in timeslots after the basic calendar is created
+        this.name = name;
+        this.timeslots = timeslots;
+        this.meetings = meetings;
     }
 
-    
     public String getId() {
         return id;
     }
@@ -68,16 +61,8 @@ public class Calendar {
         return timeslots;
     }
 
-    public LocalTime getStartHour() {
-        return startHour;
-    }
-
-    public LocalTime getEndHour() {
-        return endHour;
-    }
-
-    public int getDuration() {
-        return duration;
+    public Map<LocalDate, List<Meeting>> getMeetings() {
+        return meetings;
     }
 
     private List<Timeslot> fillInTimeslots() {

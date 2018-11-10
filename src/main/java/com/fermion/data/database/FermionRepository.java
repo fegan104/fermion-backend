@@ -4,6 +4,7 @@ import com.fermion.data.model.Calendar;
 import com.fermion.data.model.Meeting;
 import com.fermion.data.model.Timeslot;
 
+import javax.annotation.Nullable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -34,7 +35,7 @@ public class FermionRepository implements MeetingDataSource, TimeslotDataSource,
     }
 
     @Override
-    public Optional<List<Meeting>> getByTimeslot(Timeslot timeslot) {
+    public Optional<List<Meeting>> meetingByCalendar(String calendarId) {
         return Optional.empty();
     }
 
@@ -89,7 +90,7 @@ public class FermionRepository implements MeetingDataSource, TimeslotDataSource,
     }
 
     @Override
-    public Optional<Boolean> delete(DayOfWeek dayOfWeek, LocalDate day, LocalTime time) {
+    public Optional<Boolean> delete(@Nullable DayOfWeek dayOfWeek, @Nullable LocalDate day, @Nullable LocalTime time) {
         return Optional.empty();
     }
 }

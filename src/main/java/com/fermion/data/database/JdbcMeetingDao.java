@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public class JdbcMeetingDao implements MeetingDataSource {
     @Override
-    public Optional<List<Meeting>> getByCalendar(String calendarId) {
+    public Optional<List<Meeting>> meetingByCalendar(String calendarId) {
         return Optional.empty();
     }
 

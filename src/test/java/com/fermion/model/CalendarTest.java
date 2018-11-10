@@ -15,6 +15,7 @@ public class CalendarTest {
     @Test
     public void testGenTimeslots() {
         Calendar calendar = new Calendar(
+                "",
                 LocalDate.of(2018, 11, 3),
                 LocalDate.of(2018, 11, 6),
                 12,

@@ -7,26 +7,26 @@ import java.time.LocalTime;
  * Created by @author frankegan on 10/30/18.
  */
 public class Meeting {
-    private String calendarId;
     private LocalTime startTime;
+    private LocalTime endTime;
     private LocalDate day;
     private String guest;
     private String location;
 
-    public Meeting(String calendarId, LocalTime startTime, LocalDate day, String guest, String location) {
-        this.calendarId = calendarId;
+    public Meeting(LocalTime startTime, LocalTime endTime, LocalDate day, String guest, String location) {
         this.startTime = startTime;
+        this.endTime = endTime;
         this.day = day;
         this.guest = guest;
         this.location = location;
     }
 
-    public String getCalendarId() {
-        return calendarId;
-    }
-
     public LocalTime getStartTime() {
         return startTime;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
     public LocalDate getDay() {
