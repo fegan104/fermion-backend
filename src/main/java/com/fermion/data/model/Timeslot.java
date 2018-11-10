@@ -9,18 +9,16 @@ import java.util.UUID;
  */
 public class Timeslot {
     private String id;
-    private Meeting meeting;
     private LocalDate localDate;
     private LocalTime startTime;
     private LocalTime endTime;
 
-    public Timeslot(Meeting meeting, LocalDate localDate, LocalTime startTime, LocalTime endTime) {
-        this(UUID.randomUUID().toString(), meeting, localDate, startTime, endTime);
+    public Timeslot(LocalDate localDate, LocalTime startTime, LocalTime endTime) {
+        this(UUID.randomUUID().toString(), localDate, startTime, endTime);
     }
 
-    public Timeslot(String id, Meeting meeting, LocalDate localDate, LocalTime startTime, LocalTime endTime) {
+    public Timeslot(String id, LocalDate localDate, LocalTime startTime, LocalTime endTime) {
         this.id = id;
-        this.meeting = meeting;
         this.localDate = localDate;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -32,10 +30,6 @@ public class Timeslot {
 
     public LocalDate getDay() {
         return localDate;
-    }
-
-    public Meeting getMeeting() {
-        return meeting;
     }
 
     public LocalDate getLocalDate() {

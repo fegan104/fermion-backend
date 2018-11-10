@@ -9,7 +9,7 @@ import java.util.Optional;
  * Created by @author frankegan on 10/30/18.
  */
 public interface MeetingDataSource {
-    Optional<List<Meeting>> getByCalendar(String calendarId);
+    Optional<List<Meeting>> meetingByCalendar(String calendarId);
     Optional<Boolean> update(Meeting meeting);
     Optional<Boolean> delete(String id);
     Optional<Boolean> insert(Meeting meeting);

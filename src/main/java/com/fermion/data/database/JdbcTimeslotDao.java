@@ -1,17 +1,11 @@
 package com.fermion.data.database;
 
-import com.fermion.data.model.Calendar;
-import com.fermion.data.model.Meeting;
 import com.fermion.data.model.Timeslot;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Time;
+import java.sql.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +14,7 @@ import java.util.Optional;
  */
 public class JdbcTimeslotDao implements TimeslotDataSource {
 	
-	java.sql.Connection conn;
+	Connection conn;
 	
 	public JdbcTimeslotDao() {
     	try  {
@@ -87,10 +81,12 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
 
     @Override
     public Optional<Boolean> insert(Timeslot... timeslots) {
-    	Boolean success = true;
+    	boolean success = true;
     	
     	for (Timeslot t : timeslots) {
-    		if (insert(t).get()) success = false; //if a timeslot breaks, change the return value to false
+            //if a timeslot breaks, change the return value to false
+    	    Optional<Boolean> insertOptional =  insert(t);
+    		if (insertOptional.isPresent() && insertOptional.get()) success = false;
     	}
         return Optional.of(success);
     }
@@ -111,20 +107,12 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
     }
     
     private Timeslot generateTimeslot(ResultSet resultSet) throws Exception {
-        String calId  = resultSet.getString("calId");
         Time startTime = resultSet.getTime("startTime");
+        Time endTime = resultSet.getTime("startTime");
         Date date  = resultSet.getDate("dayOf");
-        String calName  = resultSet.getString("calName");
-        String dayOfWeek = resultSet.getString("dayOfWeek");
         String slotId = resultSet.getString("slotId");
         
-        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalTime localTime = startTime.toLocalTime();
-        
-        //TODO can't get meeting or endTime without using the Meeting or Calendar DAO, respectively
-        
-        
-        return new Timeslot(slotId, meeting, localDate, startTime, endTime);
+        return new Timeslot(slotId, date.toLocalDate(), startTime.toLocalTime(), endTime.toLocalTime());
     }
 
 }
