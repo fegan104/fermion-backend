@@ -5,7 +5,7 @@ import com.fermion.data.model.Meeting;
 import java.util.List;
 import java.util.Optional;
 
-//SQL Meeting has calId, startTime, dayIf, nameMeet, and location.
+//SQL Meeting has calId, startTime, dayOf, nameMeet, and location.
 //Java Meeting has ID, guest, location
 
 /**
@@ -14,7 +14,21 @@ import java.util.Optional;
 public class JdbcMeetingDao implements MeetingDataSource {
     @Override
     public Optional<List<Meeting>> meetingByCalendar(String calendarId) {
-        return Optional.empty();
+		PreparedStatement ps = conn.prepareStatement("SELECT * from meetings where calId = ?;");
+		ps.setString(1, calendarId);
+        ResultSet resultSet = ps.executeQuery();
+		List<Meeting> meetings = new ArrayList<>();
+		while (resultSet.next()) {
+                meetings.add(new Meeting(
+                        resultSet.getTime("meetingStartHr").toLocalTime(),
+                        resultSet.getTime("meetingEndHr").toLocalTime(),
+                        resultSet.getDate("meetingDayOf").toLocalDate(),
+                        resultSet.getString("nameMeet"),
+                        resultSet.getString("location")));
+            }
+
+        }
+        return meetings;
     }
 
     @Override
