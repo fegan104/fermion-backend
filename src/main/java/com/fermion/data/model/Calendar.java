@@ -102,6 +102,26 @@ public class Calendar {
         return name;
     }
 
+    public LocalDate getStartDay() {
+        return startDay;
+    }
+
+    public LocalDate getEndDay() {
+        return endDay;
+    }
+
+    public LocalTime getStartHour() {
+        return startHour;
+    }
+
+    public LocalTime getEndHour() {
+        return endHour;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
     private int getTimeslotsBetween(LocalDate startDay, LocalDate endDay) {
         int slotsPerDay = getTimeslotsPerDay();
         //we add 1 because the end day is exclusive
