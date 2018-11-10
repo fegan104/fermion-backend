@@ -64,10 +64,10 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
             }
 
             ps = conn.prepareStatement("INSERT INTO slots (calId,startTime,dayOf,dayOfWeek,slotId) values(?,?,?,?,?);");
-            ps.setString(1, "calendar ID"); //TODO unsure how to get that
+            ps.setString(1, "calendar ID");
             ps.setTime(2, Time.valueOf(timeslot.getStartTime()));
             ps.setDate(3, Date.valueOf(timeslot.getDay()));
-            ps.setString(4, "Day Of Week"); //TODO unsure how to get that
+            ps.setString(4, "Day Of Week");
             ps.setString(5, timeslot.getId());
             ps.execute();
             return Optional.of(true);
