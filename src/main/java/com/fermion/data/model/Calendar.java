@@ -84,7 +84,7 @@ public class Calendar {
             if(i > range) break;
             LocalDateTime next = index.plusMinutes(duration);
             timeslots.add(new Timeslot(
-                    null,
+                    UUID.randomUUID().toString(),
                     index.toLocalDate(),
                     index.toLocalTime(),
                     next.toLocalTime()));
