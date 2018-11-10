@@ -4,10 +4,7 @@ import com.fermion.data.model.Calendar;
 import com.fermion.data.model.Meeting;
 import com.fermion.data.model.Timeslot;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -104,10 +101,13 @@ public class JdbcCalendarDao implements CalendarDataSource {
                 return Optional.of(false);
             }
 
-            ps = conn.prepareStatement("INSERT INTO calendars (id,ownerName,calName) values(?,?,?);");
+            ps = conn.prepareStatement("INSERT INTO calendars (id,ownerName,calName,startHr,endHr,duration) values(?,?,?,?,?,?);");
             ps.setString(1, calendar.getId());
             ps.setString(2, "fermion"); //unsure how to "get owner"
-            ps.setString(3, calendar.getName()); //unsure how to "get calendar name"
+            ps.setString(3, calendar.getName());
+            ps.setTime(4, Time.valueOf(calendar.getStartHour()));
+            ps.setTime(5, Time.valueOf(calendar.getEndHour()));
+            ps.setInt(6, calendar.getDuration());
             ps.execute();
             return Optional.of(true);
 
