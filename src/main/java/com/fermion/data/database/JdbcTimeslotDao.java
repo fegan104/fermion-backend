@@ -27,14 +27,23 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
 
     @Override
     public Optional<Timeslot> timeslotById(String id) {
-    	
-        return Optional.empty();
+    	PreparedStatement ps = conn.prepareStatement("SELECT * FROM Timeslots WHERE SlotId = ?;");
+        ps.setString(1, id);
+        ResultSet resultSet = ps.executeQuery();
+
+		return generateTimeslot(resultSet);
     }
 
     @Override
     public Optional<List<Timeslot>> getByCalendar(String calendarId) {
-    	
-        return Optional.empty();
+    	PreparedStatement ps = conn.prepareStatement("SELECT * FROM Timeslots WHERE calId = ?;");
+        ps.setString(1, calendarId);
+        ResultSet resultSet = ps.executeQuery();
+        List<Timeslot> timeslots = new List<Timeslot>;
+		while (resultSet.next()) {
+			timeslots.add(generateTimeslot(resultSet));
+		}
+		return timeslots;
     }
 
     @Override
@@ -108,7 +117,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
     
     private Timeslot generateTimeslot(ResultSet resultSet) throws Exception {
         Time startTime = resultSet.getTime("startTime");
-        Time endTime = resultSet.getTime("startTime");
+        Time endTime = resultSet.getTime("endTime");
         Date date  = resultSet.getDate("dayOf");
         String slotId = resultSet.getString("slotId");
         
