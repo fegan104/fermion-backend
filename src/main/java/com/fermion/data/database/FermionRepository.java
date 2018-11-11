@@ -44,10 +44,15 @@ public class FermionRepository implements MeetingDataSource, TimeslotDataSource,
         return Optional.empty();
     }
 
-    @Override
-    public Optional<Boolean> delete(String id) {
+	@Override
+	public Optional<Boolean> delete(String id) {
         return Optional.empty();
-    }
+	}
+
+	@Override
+	public Optional<Boolean> delete(LocalDate date, LocalTime time) {
+        return Optional.empty();
+	}
 
     @Override
     public Optional<Boolean> insert(Meeting meeting) {
@@ -64,15 +69,15 @@ public class FermionRepository implements MeetingDataSource, TimeslotDataSource,
         return Optional.empty();
     }
 
-    @Override
-    public Optional<List<Timeslot>> getFrom(LocalDate from, LocalDate to) {
+	@Override
+	public Optional<List<Timeslot>> getFrom(String calendarId, LocalDate from, LocalDate to) {
         return Optional.empty();
-    }
+	}
 
-    @Override
-    public Optional<List<Timeslot>> getFrom(LocalTime from, LocalTime to) {
+	@Override
+	public Optional<List<Timeslot>> getFrom(String calendarID, LocalTime from, LocalTime to) {
         return Optional.empty();
-    }
+	}
 
     @Override
     public Optional<Boolean> insert(Timeslot timeslot) {
@@ -93,4 +98,7 @@ public class FermionRepository implements MeetingDataSource, TimeslotDataSource,
     public Optional<Boolean> delete(@Nullable DayOfWeek dayOfWeek, @Nullable LocalDate day, @Nullable LocalTime time) {
         return Optional.empty();
     }
+
+
+
 }

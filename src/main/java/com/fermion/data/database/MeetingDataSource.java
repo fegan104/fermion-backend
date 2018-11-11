@@ -2,6 +2,8 @@ package com.fermion.data.database;
 
 import com.fermion.data.model.Meeting;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +13,6 @@ import java.util.Optional;
 public interface MeetingDataSource {
     Optional<List<Meeting>> meetingByCalendar(String calendarId);
     Optional<Boolean> update(Meeting meeting);
-    Optional<Boolean> delete(String id);
+	Optional<Boolean> delete(LocalDate date, LocalTime time);
     Optional<Boolean> insert(Meeting meeting);
 }

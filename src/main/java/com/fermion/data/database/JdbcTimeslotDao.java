@@ -1,6 +1,5 @@
 package com.fermion.data.database;
 
-import com.fermion.data.model.Calendar;
 import com.fermion.data.model.Timeslot;
 
 import java.sql.*;
@@ -73,51 +72,49 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
     }
 
     @Override
-    public Optional<List<Timeslot>> getFrom(LocalDate from, LocalDate to) {
-        try {
-            Timeslot timeslotResult;
-            List<Timeslot> timeslotList = new ArrayList<Timeslot>();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE (dayOf BETWEEN ? AND ?);");
+    public Optional<List<Timeslot>> getFrom(String calendarId, LocalDate from, LocalDate to) {
+    	try {
+    		PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE dayOf <= ? AND dayOf >= ? AND calId = ?;");
             ps.setDate(1, Date.valueOf(from));
-            ps.setDate(2, Date.valueOf(to));
+    		ps.setDate(2, Date.valueOf(to));
+    		ps.setString(3, calendarId);
             ResultSet resultSet = ps.executeQuery();
-            
-            while (resultSet.next()) {
-                timeslotResult = generateTimeslot(resultSet);
-                timeslotList.add(timeslotResult);
+            List<Timeslot> timeslots = new ArrayList<Timeslot>();
+    		while (resultSet.next()) {
+    			timeslots.add(generateTimeslot(resultSet));
+    		}
+    		resultSet.close();
+    		ps.close();
+
+    		return Optional.of(timeslots);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return Optional.empty();
             }
-
-            resultSet.close();
-            ps.close();
-
-            return Optional.of(timeslotList);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
     }
     
     
     @Override
-    public Optional<List<Timeslot>> getFrom(LocalTime from, LocalTime to) {
+    public Optional<List<Timeslot>> getFrom(String calendarId, LocalTime from, LocalTime to) {
         try {
             Timeslot timeslotResult;
-            List<Timeslot> timeslotList = new ArrayList<Timeslot>();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE ((startTime > ?) AND (endTime < ?));");
+            List<Timeslot> timeslots = new ArrayList<Timeslot>();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE startTime >= ? AND endTime <= ? AND calId = ?;");
             ps.setTime(1, Time.valueOf(from));
             ps.setTime(2, Time.valueOf(to));
+    		ps.setString(3, calendarId);
             ResultSet resultSet = ps.executeQuery();
             
             while (resultSet.next()) {
                 timeslotResult = generateTimeslot(resultSet);
-                timeslotList.add(timeslotResult);
+                timeslots.add(timeslotResult);
             }
 
             resultSet.close();
             ps.close();
 
-            return Optional.of(timeslotList);
+            return Optional.of(timeslots);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,7 +136,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
                 return Optional.of(false);
             }
 
-            ps = conn.prepareStatement("INSERT INTO slots (calId,startTime,dayOf,dayOfWeek,slotId) values(?,?,?,?,?);");
+            ps = conn.prepareStatement("INSERT INTO slots (calId,startTime,endTime,dayOf,dayOfWeek,slotId) values(?,?,?,?,?,?);");
             ps.setString(1, "calendar ID");//At the moment, the timeslot doesn't know its calendar ID
             ps.setTime(2, Time.valueOf(timeslot.getStartTime()));
             ps.setDate(3, Date.valueOf(timeslot.getDay())); 
@@ -169,7 +166,28 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
 
     @Override
     public Optional<Boolean> update(Timeslot timeslot) {
-        return Optional.empty();
+        try {
+            PreparedStatement ps = conn.prepareStatement("UPDATE slots SET calId=?, startTime=?, endTime=?, dayOf=?, dayOfWeek=? WHERE slotId=?;");
+        	ps.setString(1, "Calendar ID");
+        	ps.setTime(2, Time.valueOf(timeslot.getStartTime()));
+        	ps.setTime(3, Time.valueOf(timeslot.getEndTime()));
+        	ps.setDate(4, Date.valueOf(timeslot.getDay()));
+        	ps.setString(5, "day of week");
+        	ps.setString(6, timeslot.getId());
+
+        	int rowsUpdated = ps.executeUpdate();
+        	if (rowsUpdated > 0) {
+        		//successfully updated
+        		return Optional.of(true);
+        	}
+        	//failed to update
+        	return Optional.of(false);
+        	
+        	
+        } catch (Exception e) {
+        	e.printStackTrace();
+            return Optional.of(false);
+        }
     }
 
     @Override
@@ -185,19 +203,30 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
         } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();
-        }
+        }        
     }
 
     
     @Override
     public Optional<Boolean> delete(DayOfWeek dayOfWeek, LocalDate day, LocalTime time) {
-        return Optional.empty();
-        //TODO am I going to delete if the dayOfWeek AND date AND time match? Or should I skip each field if it is null?
+    	try {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM slots WHERE dayOf = ? AND startTime = ?;");
+            ps.setDate(1, Date.valueOf(day));
+    		ps.setTime(2, Time.valueOf(time));
+            int numAffected = ps.executeUpdate();
+            ps.close();
+
+            return Optional.of(numAffected == 1);
+
+        	} catch (Exception e) {
+                e.printStackTrace();
+                return Optional.empty();
+            }
     }
     
     private Timeslot generateTimeslot(ResultSet resultSet) throws Exception {
         Time startTime = resultSet.getTime("startTime");
-        Time endTime = resultSet.getTime("startTime");
+        Time endTime = resultSet.getTime("endTime");
         Date date  = resultSet.getDate("dayOf");
         String slotId = resultSet.getString("slotId");
         

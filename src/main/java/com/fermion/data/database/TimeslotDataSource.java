@@ -15,8 +15,8 @@ import java.util.Optional;
 public interface TimeslotDataSource {
     Optional<Timeslot> timeslotById(String id);
     Optional<List<Timeslot>> getByCalendar(String calendarId);
-    Optional<List<Timeslot>> getFrom(LocalDate from, LocalDate to);
-    Optional<List<Timeslot>> getFrom(LocalTime from, LocalTime to);
+	Optional<List<Timeslot>> getFrom(String calendarId, LocalDate from, LocalDate to);
+    Optional<List<Timeslot>> getFrom(String calendarID, LocalTime from, LocalTime to);
     Optional<Boolean> insert(Timeslot timeslot);
     Optional<Boolean> insert(Timeslot... timeslots);
     Optional<Boolean> update(Timeslot timeslot);
