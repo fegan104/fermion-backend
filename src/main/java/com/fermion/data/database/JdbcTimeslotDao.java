@@ -47,15 +47,31 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
     }
 
     @Override
-    public Optional<List<Timeslot>> getFrom(LocalDate from, LocalDate to) {
-    	
-        return Optional.empty();
-    }
+    public Optional<List<Timeslot>> getFrom(String calendarId LocalDate from, LocalDate to) {
+		PreparedStatement ps = conn.prepareStatement("select * from slots where dayOf <= ? and dayOf >= ? and calId = ?;");
+        ps.setString(2, from);
+		ps.setString(1, to);
+		ps.setString(3, calendarId);
+        ResultSet resultSet = ps.executeQuery();
+        List<Timeslot> timeslots = new List<Timeslot>;
+		while (resultSet.next()) {
+			timeslots.add(generateTimeslot(resultSet));
+		}
+		return timeslots;
+    	    }
 
     @Override
-    public Optional<List<Timeslot>> getFrom(LocalTime from, LocalTime to) {
-    	
-        return Optional.empty();
+    public Optional<List<Timeslot>> getFrom(LocalTime from, LocalTime to, String calendarId) {
+    	PreparedStatement ps = conn.prepareStatement("select * from slots where startTime >= ? and endTime <= ? and calId = ?;");
+		ps.setString(1, from);
+		ps.setString(2, to);
+		ps.setString(3, calendarId);
+		ResultSet resultSet = ps.executeQuery();
+        List<Timeslot> timeslots = new List<Timeslot>;
+		while (resultSet.next()) {
+			timeslots.add(generateTimeslot(resultSet));
+		}
+		return timeslots;
     }
 
     @Override
@@ -107,12 +123,19 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
 
     @Override
     public Optional<Boolean> delete(String id) {
-        return Optional.empty();
+        PreparedStatement ps = conn.prepareStatement("delete from slots where slotId = ?;");
+        ps.setString(1, id);
+        ResultSet resultSet = ps.executeQuery();
+		return true;
     }
 
     @Override
     public Optional<Boolean> delete(DayOfWeek dayOfWeek, LocalDate day, LocalTime time) {
-        return Optional.empty();
+        PreparedStatement ps = conn.prepareStatement("delete from slots where dayOf = ? and startTime = ?;");
+        ps.setString(1, day);
+		ps.setString(2, time);
+        ResultSet resultSet = ps.executeQuery();
+		return true;
     }
     
     private Timeslot generateTimeslot(ResultSet resultSet) throws Exception {
