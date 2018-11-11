@@ -131,16 +131,17 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
             
             // already present? don't insert it.
             while (resultSet.next()) {
-                Timeslot t = generateTimeslot(resultSet);
                 resultSet.close();
                 return Optional.of(false);
             }
 
+            String weekDay = timeslot.getDay().getDayOfWeek().name().substring(0,2); //This should return a 2-character string, like "SU, MO, etc"
+            
             ps = conn.prepareStatement("INSERT INTO slots (calId,startTime,endTime,dayOf,dayOfWeek,slotId) values(?,?,?,?,?,?);");
             ps.setString(1, "calendar ID");//At the moment, the timeslot doesn't know its calendar ID
             ps.setTime(2, Time.valueOf(timeslot.getStartTime()));
             ps.setDate(3, Date.valueOf(timeslot.getDay())); 
-            ps.setString(4, "??"); //at the moment, timeslot doesn't know its dayOfWeek
+            ps.setString(4, weekDay);
             ps.setString(5, timeslot.getId());
             ps.execute();
             return Optional.of(true);
@@ -167,12 +168,15 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
     @Override
     public Optional<Boolean> update(Timeslot timeslot) {
         try {
+            String weekDay = timeslot.getDay().getDayOfWeek().name().substring(0,2); //This should return a 2-character string, like "SU, MO, etc"
+
+        	
             PreparedStatement ps = conn.prepareStatement("UPDATE slots SET calId=?, startTime=?, endTime=?, dayOf=?, dayOfWeek=? WHERE slotId=?;");
         	ps.setString(1, "Calendar ID");
         	ps.setTime(2, Time.valueOf(timeslot.getStartTime()));
         	ps.setTime(3, Time.valueOf(timeslot.getEndTime()));
         	ps.setDate(4, Date.valueOf(timeslot.getDay()));
-        	ps.setString(5, "??");
+        	ps.setString(5, weekDay);
         	ps.setString(6, timeslot.getId());
 
         	int rowsUpdated = ps.executeUpdate();
