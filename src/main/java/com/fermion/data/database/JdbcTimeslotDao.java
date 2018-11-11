@@ -140,7 +140,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
             ps.setString(1, "calendar ID");//At the moment, the timeslot doesn't know its calendar ID
             ps.setTime(2, Time.valueOf(timeslot.getStartTime()));
             ps.setDate(3, Date.valueOf(timeslot.getDay())); 
-            ps.setString(4, "Day Of Week"); //at the moment, timeslot doesn't know its dayOfWeek
+            ps.setString(4, "??"); //at the moment, timeslot doesn't know its dayOfWeek
             ps.setString(5, timeslot.getId());
             ps.execute();
             return Optional.of(true);
@@ -172,7 +172,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
         	ps.setTime(2, Time.valueOf(timeslot.getStartTime()));
         	ps.setTime(3, Time.valueOf(timeslot.getEndTime()));
         	ps.setDate(4, Date.valueOf(timeslot.getDay()));
-        	ps.setString(5, "day of week");
+        	ps.setString(5, "??");
         	ps.setString(6, timeslot.getId());
 
         	int rowsUpdated = ps.executeUpdate();
