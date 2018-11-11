@@ -32,13 +32,13 @@ public class JdbcCalendarDao implements CalendarDataSource {
         try {
             Calendar calendarResult;
             //populate the meetings and timeslots
-            PreparedStatement ps2 = conn.prepareStatement(calendarJoinQuery(calendarId));
+            PreparedStatement ps = conn.prepareStatement(calendarJoinQuery(calendarId));
             //returns a set of mega-rows that have some combo of calendar, timeslot and meeting output
-            ResultSet resultSet = ps2.executeQuery();
+            ResultSet resultSet = ps.executeQuery();
             calendarResult = generateCalendar(resultSet);
 
             resultSet.close();
-            ps2.close();
+            ps.close();
 
             return Optional.of(calendarResult);
 
