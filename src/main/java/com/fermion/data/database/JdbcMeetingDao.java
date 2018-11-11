@@ -54,10 +54,10 @@ public class JdbcMeetingDao implements MeetingDataSource {
     }
 
     @Override
-    public Optional<Boolean> update(Meeting meeting) {
+    public Optional<Boolean> update(String calId, Meeting meeting) {
         try {
             PreparedStatement ps = conn.prepareStatement("UPDATE meetings SET calId=?, endTime=?, nameMeet=?, location=? WHERE startTime=? AND dayOf=?;");
-        	ps.setString(1, "Calendar ID");
+        	ps.setString(1, calId);
         	ps.setTime(2, Time.valueOf(meeting.getEndTime()));
         	ps.setString(3, meeting.getGuest());     
         	ps.setString(4, meeting.getLocation());
@@ -97,7 +97,7 @@ public class JdbcMeetingDao implements MeetingDataSource {
     }
 
     @Override
-    public Optional<Boolean> insert(Meeting meeting) {
+    public Optional<Boolean> insert(String calId, Meeting meeting) {
         try {
         	PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE startTime=? AND dayOf=?;");
             ps.setTime(1, Time.valueOf(meeting.getStartTime()));
@@ -111,7 +111,7 @@ public class JdbcMeetingDao implements MeetingDataSource {
             }
 
             ps = conn.prepareStatement("INSERT INTO slots (calId,startTime,endTime,dayOf,nameMeet,location) values(?,?,?,?,?,?);");
-            ps.setString(1, "calendar ID");//At the moment, the meeting doesn't know its calendar ID
+            ps.setString(1, calId);
             ps.setTime(2, Time.valueOf(meeting.getStartTime()));
             ps.setTime(3, Time.valueOf(meeting.getEndTime()));
             ps.setDate(4, Date.valueOf(meeting.getDay())); 

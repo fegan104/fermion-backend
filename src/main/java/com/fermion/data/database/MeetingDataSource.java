@@ -12,7 +12,7 @@ import java.util.Optional;
  */
 public interface MeetingDataSource {
     Optional<List<Meeting>> meetingByCalendar(String calendarId);
-    Optional<Boolean> update(Meeting meeting);
+	Optional<Boolean> update(String calId, Meeting meeting);
 	Optional<Boolean> delete(LocalDate date, LocalTime time);
-    Optional<Boolean> insert(Meeting meeting);
+	Optional<Boolean> insert(String calId, Meeting meeting);
 }

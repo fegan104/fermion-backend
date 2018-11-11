@@ -123,7 +123,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
     }
 
     @Override
-    public Optional<Boolean> insert(Timeslot timeslot) {
+    public Optional<Boolean> insert(String calId, Timeslot timeslot) {
         try {
         	PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE SlotId = ?;");
             ps.setString(1, timeslot.getId());
@@ -138,7 +138,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
             String weekDay = timeslot.getDay().getDayOfWeek().name().substring(0,2); //This should return a 2-character string, like "SU, MO, etc"
             
             ps = conn.prepareStatement("INSERT INTO slots (calId,startTime,endTime,dayOf,dayOfWeek,slotId) values(?,?,?,?,?,?);");
-            ps.setString(1, "calendar ID");//At the moment, the timeslot doesn't know its calendar ID
+            ps.setString(1, calId);
             ps.setTime(2, Time.valueOf(timeslot.getStartTime()));
             ps.setDate(3, Date.valueOf(timeslot.getDay())); 
             ps.setString(4, weekDay);
@@ -154,25 +154,25 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
     }
 
     @Override
-    public Optional<Boolean> insert(Timeslot... timeslots) {
+    public Optional<Boolean> insert(String calId, Timeslot... timeslots) {
     	boolean success = true;
     	
     	for (Timeslot t : timeslots) {
             //if a timeslot breaks for any one timeslot, change the return value to false
-    	    Optional<Boolean> insertOptional =  insert(t);
+    	    Optional<Boolean> insertOptional =  insert(calId, t);
     		if (insertOptional.isPresent() && insertOptional.get()) success = false;
     	}
         return Optional.of(success);
     }
 
     @Override
-    public Optional<Boolean> update(Timeslot timeslot) {
+    public Optional<Boolean> update(String calId, Timeslot timeslot) {
         try {
             String weekDay = timeslot.getDay().getDayOfWeek().name().substring(0,2); //This should return a 2-character string, like "SU, MO, etc"
 
         	
             PreparedStatement ps = conn.prepareStatement("UPDATE slots SET calId=?, startTime=?, endTime=?, dayOf=?, dayOfWeek=? WHERE slotId=?;");
-        	ps.setString(1, "Calendar ID");
+        	ps.setString(1, calId);
         	ps.setTime(2, Time.valueOf(timeslot.getStartTime()));
         	ps.setTime(3, Time.valueOf(timeslot.getEndTime()));
         	ps.setDate(4, Date.valueOf(timeslot.getDay()));

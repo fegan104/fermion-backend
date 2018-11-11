@@ -40,7 +40,7 @@ public class FermionRepository implements MeetingDataSource, TimeslotDataSource,
     }
 
     @Override
-    public Optional<Boolean> update(Meeting meeting) {
+	public Optional<Boolean> update(String calId, Meeting meeting) {
         return Optional.empty();
     }
 
@@ -55,7 +55,7 @@ public class FermionRepository implements MeetingDataSource, TimeslotDataSource,
 	}
 
     @Override
-    public Optional<Boolean> insert(Meeting meeting) {
+	public Optional<Boolean> insert(String calId, Meeting meeting) {
         return Optional.empty();
     }
 
@@ -79,18 +79,18 @@ public class FermionRepository implements MeetingDataSource, TimeslotDataSource,
         return Optional.empty();
 	}
 
-    @Override
-    public Optional<Boolean> insert(Timeslot timeslot) {
+	@Override
+	public Optional<Boolean> insert(String calId, Timeslot timeslot) {
         return Optional.empty();
-    }
+	}
+
+	@Override
+	public Optional<Boolean> insert(String calId, Timeslot... timeslots) {
+        return Optional.empty();
+	}
 
     @Override
-    public Optional<Boolean> insert(Timeslot... timeslots) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<Boolean> update(Timeslot timeslot) {
+	public Optional<Boolean> update(String calId, Timeslot timeslot) {
         return Optional.empty();
     }
 
@@ -98,6 +98,9 @@ public class FermionRepository implements MeetingDataSource, TimeslotDataSource,
     public Optional<Boolean> delete(@Nullable DayOfWeek dayOfWeek, @Nullable LocalDate day, @Nullable LocalTime time) {
         return Optional.empty();
     }
+
+
+
 
 
 

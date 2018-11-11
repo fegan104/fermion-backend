@@ -17,9 +17,9 @@ public interface TimeslotDataSource {
     Optional<List<Timeslot>> getByCalendar(String calendarId);
 	Optional<List<Timeslot>> getFrom(String calendarId, LocalDate from, LocalDate to);
     Optional<List<Timeslot>> getFrom(String calendarID, LocalTime from, LocalTime to);
-    Optional<Boolean> insert(Timeslot timeslot);
-    Optional<Boolean> insert(Timeslot... timeslots);
-    Optional<Boolean> update(Timeslot timeslot);
+	Optional<Boolean> insert(String calId, Timeslot timeslot);
+	Optional<Boolean> insert(String calId, Timeslot... timeslots);
+	Optional<Boolean> update(String calId, Timeslot timeslot);
     Optional<Boolean> delete(String id);
     Optional<Boolean> delete(@Nullable DayOfWeek dayOfWeek, @Nullable LocalDate day, @Nullable LocalTime time);
 }
