@@ -107,7 +107,7 @@ public class JdbcMeetingDao implements MeetingDataSource {
             // already present? don't insert it.
             while (resultSet.next()) {
                 resultSet.close();
-                return Optional.of(false);
+                return Optional.of(false); 
             }
 
             ps = conn.prepareStatement("INSERT INTO slots (calId,startTime,endTime,dayOf,nameMeet,location) values(?,?,?,?,?,?);");
