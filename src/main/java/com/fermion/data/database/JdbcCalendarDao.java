@@ -3,9 +3,11 @@ package com.fermion.data.database;
 import com.fermion.data.model.Calendar;
 import com.fermion.data.model.Meeting;
 import com.fermion.data.model.Timeslot;
+import com.fermion.logger.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +24,10 @@ public class JdbcCalendarDao implements CalendarDataSource {
         try {
             conn = DatabaseUtil.connect();
         } catch (Exception e) {
+            Logger.log(e.getMessage());
+            Arrays.asList(e.getStackTrace()).forEach(it ->
+                    Logger.log(it.toString())
+            );
             conn = null;
         }
     }
@@ -89,6 +95,10 @@ public class JdbcCalendarDao implements CalendarDataSource {
 
     @Override
     public Optional<Boolean> insert(Calendar calendar) {
+        if (conn == null) {
+            Logger.log("No connection to database available");
+            return Optional.of(false);
+        }
         try {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM calendars WHERE id = ?;");
             ps.setString(1, calendar.getId());
@@ -105,8 +115,8 @@ public class JdbcCalendarDao implements CalendarDataSource {
             ps.setString(1, calendar.getId());
             ps.setString(2, "fermion"); //unsure how to "get owner"
             ps.setString(3, calendar.getName());
-            ps.setTime(4, Time.valueOf(calendar.getStartHour()));
-            ps.setTime(5, Time.valueOf(calendar.getEndHour()));
+            ps.setInt(4, calendar.getStartHour().getHour());
+            ps.setInt(5, calendar.getEndHour().getHour());
             ps.setInt(6, calendar.getDuration());
             ps.execute();
             return Optional.of(true);

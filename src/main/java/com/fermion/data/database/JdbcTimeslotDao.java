@@ -154,7 +154,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
     }
 
     @Override
-    public Optional<Boolean> insert(String calId, Timeslot... timeslots) {
+    public Optional<Boolean> insert(String calId, List<Timeslot> timeslots) {
     	boolean success = true;
     	
     	for (Timeslot t : timeslots) {
