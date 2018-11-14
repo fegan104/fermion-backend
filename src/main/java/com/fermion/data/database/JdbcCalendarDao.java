@@ -105,8 +105,7 @@ public class JdbcCalendarDao implements CalendarDataSource {
             ResultSet resultSet = ps.executeQuery();
 
             // already present?
-            while (resultSet.next()) {
-                Calendar c = generateCalendar(resultSet);
+            if (resultSet.next()) {
                 resultSet.close();
                 return Optional.of(false);
             }

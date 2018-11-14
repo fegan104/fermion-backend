@@ -49,7 +49,7 @@ public class AddCalendarLambda implements RequestHandler<Map<String, Object>, Ap
             );
 
             Logger.log("Starting insert");
-            calendarDao.insert(calendar);
+//            calendarDao.insert(calendar);
 //            timeslotDao.insert(calendar.getId(), calendar.getTimeslots()
 //                    .values()
 //                    .stream()
