@@ -21,4 +21,8 @@ public class MeetingResponseData extends ResponseData {
         this.guest = meeting.getGuest();
         this.location = meeting.getLocation();
     }
+    
+    public String getGuest() {
+    	return guest;
+    }
 }
