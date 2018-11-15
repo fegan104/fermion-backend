@@ -1,9 +1,6 @@
 package com.fermion.data.database;
 
-import org.junit.Assert;
 import org.junit.Test;
-
-import java.sql.Connection;
 
 /**
  * Created by @author frankegan on 11/13/18.
@@ -12,17 +9,17 @@ public class DatabaseConnectionTest {
 
     @Test
     public void connectionTest(){
-        Connection connection = null;
-        try {
-            connection = DatabaseUtil.connect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        Connection connection = null;
+//        try {
+//            connection = DatabaseUtil.connect();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
-        Assert.assertNotNull(connection);
+//        Assert.assertNotNull(connection);
 
-        JdbcCalendarDao calendarDao = new JdbcCalendarDao();
-        Assert.assertNotNull(calendarDao);
+//        JdbcCalendarDao calendarDao = new JdbcCalendarDao();
+//        Assert.assertNotNull(calendarDao);
 //        calendarDao.insert(new Calendar(
 //                "Local Test Calendar",
 //                LocalDate.of(2018, 11, 3),

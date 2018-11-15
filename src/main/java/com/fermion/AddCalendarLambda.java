@@ -16,7 +16,9 @@ import com.google.gson.JsonParser;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by @author frankegan on 10/31/18.
@@ -49,12 +51,12 @@ public class AddCalendarLambda implements RequestHandler<Map<String, Object>, Ap
             );
 
             Logger.log("Starting insert");
-//            calendarDao.insert(calendar);
-//            timeslotDao.insert(calendar.getId(), calendar.getTimeslots()
-//                    .values()
-//                    .stream()
-//                    .flatMap(Collection::stream)
-//                    .collect(Collectors.toList()));
+            calendarDao.insert(calendar);
+            timeslotDao.insert(calendar.getId(), calendar.getTimeslots()
+                    .values()
+                    .stream()
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList()));
 
             Logger.log("Writing json response");
             CalendarResponseData calRes = new CalendarResponseData(calendar);
