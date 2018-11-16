@@ -132,4 +132,12 @@ public class Calendar {
     private int getTimeslotsPerDay() {
         return ((int) Duration.between(startHour, endHour).toMinutes()) / duration;
     }
+
+    public void setTimeslots(Map<LocalDate, List<Timeslot>> timeslots) {
+        this.timeslots = timeslots;
+    }
+
+    public void setMeetings(Map<LocalDate, List<Meeting>> meetings) {
+        this.meetings = meetings;
+    }
 }

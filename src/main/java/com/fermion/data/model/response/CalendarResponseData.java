@@ -53,4 +53,8 @@ public class CalendarResponseData extends ResponseData {
     public void setDays(List<DayResponseData> days) {
         this.days = days;
     }
+
+    public String getName() {
+        return name;
+    }
 }
