@@ -57,7 +57,13 @@ public class JdbcCalendarDao implements CalendarDataSource {
             PreparedStatement ps = conn.prepareStatement("SELECT id FROM calendars;");
             ResultSet resultSet = ps.executeQuery();
 
-            while (resultSet.next()) calendars.add(generateCalendar(resultSet));
+            while (resultSet.next()) {
+            	PreparedStatement ps2 = calendarJoinQuery(resultSet);
+            	ResultSet resultSet2 = ps2.executeQuery();
+            	while (resultSet2.next()) {
+                	calendars.add(generateCalendar(resultSet2));
+            	}
+            }
 
             resultSet.close();
             ps.close();
@@ -156,23 +162,13 @@ public class JdbcCalendarDao implements CalendarDataSource {
         );
     }
 
-    private String calendarJoinQuery(String calendarId) {
-        return "SELECT" +
-                "  id," +
-                "  calName," +
-                "  meeting.startHr AS meetingStartHr," +
-                "  meeting.endHr AS meetingEndHr," +
-                "  meeting.dayOf AS meetingDayOf," +
-                "  slot.startHr AS slotStartHr," +
-                "  slot.endHr AS slotEndHr," +
-                "  slot.dayOf AS slotDayOf," +
-                "  nameMeet," +
-                "  location," +
-                "  dayOfWeek," +
-                "  slotId" +
-                "FROM calendars" +
-                "LEFT JOIN slots ON " + calendarId + " = slots.calId" +
-                "LEFT JOIN meetings ON " + calendarId + " = meetings.calId";
+    private PreparedStatement calendarJoinQuery(String calendarId) {
+        PreparedStatement ps = conn.prepareStatement("SELECT  id, calName,  meetings.startTime AS meetingStartHr, meetings.endTime AS meetingEndHr,  meetings.dayOf AS meetingDayOf, " +
+        		  "slots.startTime AS slotStartHr,  slots.endTime AS slotEndHr, slots.dayOf AS slotDayOf, nameMeet, location, dayOfWeek, slotId " +
+        		  "FROM calendars LEFT JOIN slots ON  id  = slots.calId LEFT JOIN meetings ON meetings.startTime = slots.startTime and meetings.dayOf = slots.dayOf and meetings.calId = id;" +
+        		  "WHERE id = ?");
+        ps.setString(1, calendarId);
+        return ps;
     }
 
 }
