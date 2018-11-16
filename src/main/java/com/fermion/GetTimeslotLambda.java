@@ -2,10 +2,8 @@ package com.fermion;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.fermion.data.model.Calendar;
 import com.fermion.data.model.Timeslot;
 import com.fermion.data.model.response.ApiGatewayResponse;
-import com.fermion.data.model.response.CalendarResponseData;
 import com.fermion.data.model.response.TimeslotResponseData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,8 +37,8 @@ public class GetTimeslotLambda implements RequestHandler<Map<String, Object>, Ap
 					LocalTime.parse(body.get("endTime").getAsString(), timef)
 					);
 			TimeslotResponseData timeRes = new TimeslotResponseData(timeslot);
-			context.getLogger().log("Created" + timeRes.getId());
-			return new ApiGatewayResponse(201, gson.toJson(timeRes));
+			context.getLogger().log("Fetched" + timeRes.getId());
+			return new ApiGatewayResponse(202, gson.toJson(timeRes));
 		} catch (Exception e) {
 			context.getLogger().log(e.toString());
 			Arrays.asList(e.getStackTrace()).forEach(it -> context.getLogger().log(it.toString()));

@@ -37,8 +37,8 @@ public class DeleteCalendarLambda implements RequestHandler<Map<String, Object>,
 					body.get("duration").getAsInt()
 					);
 			CalendarResponseData calRes = new CalendarResponseData(calendar);
-			context.getLogger().log("Created" + calRes.getId());
-			return new ApiGatewayResponse(201, gson.toJson(calRes));
+			context.getLogger().log("Deleted" + calRes.getId());
+			return new ApiGatewayResponse(202, gson.toJson(calRes));
 		} catch (Exception e) {
 			context.getLogger().log(e.toString());
 			Arrays.asList(e.getStackTrace()).forEach(it -> context.getLogger().log(it.toString()));

@@ -38,7 +38,7 @@ public class GetMeetingLambda implements RequestHandler<Map<String, Object>, Api
 					body.get("location").getAsString()
 					);
 			MeetingResponseData meetingRes = new MeetingResponseData(meeting);
-			context.getLogger().log("Added Meeting with " + meetingRes.getGuest());
+			context.getLogger().log("Fetched Meeting with " + meetingRes.getGuest());
 			return new ApiGatewayResponse(202, gson.toJson(meetingRes));
 		} catch (Exception e) {
 			context.getLogger().log(e.toString());

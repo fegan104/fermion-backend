@@ -37,8 +37,8 @@ public class DeleteTimeslotLambda implements RequestHandler<Map<String, Object>,
 					LocalTime.parse(body.get("endTime").getAsString(), timef)
 					);
 			TimeslotResponseData timeRes = new TimeslotResponseData(timeslot);
-			context.getLogger().log("Created" + timeRes.getId());
-			return new ApiGatewayResponse(201, gson.toJson(timeRes));
+			context.getLogger().log("Deleted" + timeRes.getId());
+			return new ApiGatewayResponse(202, gson.toJson(timeRes));
 		} catch (Exception e) {
 			context.getLogger().log(e.toString());
 			Arrays.asList(e.getStackTrace()).forEach(it -> context.getLogger().log(it.toString()));
