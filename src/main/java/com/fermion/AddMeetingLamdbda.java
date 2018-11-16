@@ -20,7 +20,7 @@ public class AddMeetingLamdbda implements RequestHandler<Map<String, Object>, Ap
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
     	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    	DateTimeFormatter timef = DateTimeFormatter.ofPattern("HH:mm:ss");
+    	DateTimeFormatter timef = DateTimeFormatter.ofPattern("HH:mm");
     	for (Map.Entry e : input.entrySet()) {
              context.getLogger().log(e.getKey() + ": " + e.getValue() + "\n");
          }
