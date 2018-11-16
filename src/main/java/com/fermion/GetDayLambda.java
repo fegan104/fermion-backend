@@ -37,11 +37,13 @@ public class GetDayLambda implements RequestHandler<Map<String, Object>, ApiGate
 			JsonArray timeslots = body.get("timeslots").getAsJsonArray(); 
 			JsonArray meetings = body.get("meetings").getAsJsonArray();
 			List<TimeslotResponseData> timedata = new List<TimeslotResponseData>();
-			
+
 			if (timeslots != null) { 
-				   for (int i=0;i<timeslots.size();i++){ 
-				    timedata.add(timeslots.get(i));
-				   } 
+				for (int i=0;i<timeslots.size();i++){
+					
+							timedata.add(timeslots.get(i));
+				}
+			} 
 			DayResponseData dayRes = new DayResponseData(
 					LocalDate.parse(body.get("day").getAsString(), dtf), 
 					);
