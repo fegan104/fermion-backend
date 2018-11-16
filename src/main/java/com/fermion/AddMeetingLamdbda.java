@@ -20,7 +20,7 @@ public class AddMeetingLamdbda implements RequestHandler<Map<String, Object>, Ap
 	@Override
 	public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		DateTimeFormatter timef = DateTimeFormatter.ofPattern("HH:mm:ss");
+		DateTimeFormatter timef = DateTimeFormatter.ofPattern("HH:mm");
 		for (Map.Entry e : input.entrySet()) {
 			context.getLogger().log(e.getKey() + ": " + e.getValue() + "\n");
 		}
@@ -28,8 +28,8 @@ public class AddMeetingLamdbda implements RequestHandler<Map<String, Object>, Ap
 		try {
 			JsonObject body = new JsonParser().parse((String) input.get("body")).getAsJsonObject();
 			Meeting meeting = new Meeting(
-					LocalTime.parse(body.get("startTime").getAsString(), timef), 
-					LocalTime.parse(body.get("endTime").getAsString(), timef), 
+					LocalTime.parse(body.get("startTime").getAsString(), timef),
+					LocalTime.parse(body.get("endTime").getAsString(), timef),
 					LocalDate.parse(body.get("day").getAsString(), dtf),
 					body.get("guest").getAsString(),
 					body.get("location").getAsString()
