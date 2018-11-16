@@ -50,7 +50,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
     public Optional<List<Timeslot>> getByCalendar(String calendarId) {
         try {
             Timeslot timeslotResult;
-            List<Timeslot> timeslotList = new ArrayList<Timeslot>();
+            List<Timeslot> timeslotList = new ArrayList<>();
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE calId = ?;");
             ps.setString(1, calendarId);
             ResultSet resultSet = ps.executeQuery();
@@ -73,59 +73,61 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
 
     @Override
     public Optional<List<Timeslot>> getFrom(String calendarId, LocalDate from, LocalDate to) {
-    	try {
-    		PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE dayOf <= ? AND dayOf >= ? AND calId = ?;");
-            ps.setDate(1, Date.valueOf(from));
-    		ps.setDate(2, Date.valueOf(to));
-    		ps.setString(3, calendarId);
-            ResultSet resultSet = ps.executeQuery();
-            List<Timeslot> timeslots = new ArrayList<Timeslot>();
-    		while (resultSet.next()) {
-    			timeslots.add(generateTimeslot(resultSet));
-    		}
-    		resultSet.close();
-    		ps.close();
-
-    		return Optional.of(timeslots);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return Optional.empty();
-            }
+//    	try {
+//    		PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE dayOf <= ? AND dayOf >= ? AND calId = ?;");
+//            ps.setDate(1, Date.valueOf(from));
+//    		ps.setDate(2, Date.valueOf(to));
+//    		ps.setString(3, calendarId);
+//            ResultSet resultSet = ps.executeQuery();
+//            List<Timeslot> timeslots = new ArrayList<Timeslot>();
+//    		while (resultSet.next()) {
+//    			timeslots.add(generateTimeslot(resultSet));
+//    		}
+//    		resultSet.close();
+//    		ps.close();
+//
+//    		return Optional.of(timeslots);
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return Optional.empty();
+//            }
+        return Optional.empty();
     }
     
     
     @Override
     public Optional<List<Timeslot>> getFrom(String calendarId, LocalTime from, LocalTime to) {
-        try {
-            Timeslot timeslotResult;
-            List<Timeslot> timeslots = new ArrayList<Timeslot>();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE startTime >= ? AND endTime <= ? AND calId = ?;");
-            ps.setTime(1, Time.valueOf(from));
-            ps.setTime(2, Time.valueOf(to));
-    		ps.setString(3, calendarId);
-            ResultSet resultSet = ps.executeQuery();
-            
-            while (resultSet.next()) {
-                timeslotResult = generateTimeslot(resultSet);
-                timeslots.add(timeslotResult);
-            }
-
-            resultSet.close();
-            ps.close();
-
-            return Optional.of(timeslots);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
+//        try {
+//            Timeslot timeslotResult;
+//            List<Timeslot> timeslots = new ArrayList<Timeslot>();
+//            PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE startTime >= ? AND endTime <= ? AND calId = ?;");
+//            ps.setTime(1, Time.valueOf(from));
+//            ps.setTime(2, Time.valueOf(to));
+//    		ps.setString(3, calendarId);
+//            ResultSet resultSet = ps.executeQuery();
+//
+//            while (resultSet.next()) {
+//                timeslotResult = generateTimeslot(resultSet);
+//                timeslots.add(timeslotResult);
+//            }
+//
+//            resultSet.close();
+//            ps.close();
+//
+//            return Optional.of(timeslots);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return Optional.empty();
+//        }
+        return Optional.empty();
     }
 
     @Override
     public Optional<Boolean> insert(String calId, Timeslot timeslot) {
         try {
-        	PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE SlotId = ?;");
+        	PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE slotId = ?;");
             ps.setString(1, timeslot.getId());
             ResultSet resultSet = ps.executeQuery();
             
@@ -140,9 +142,10 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
             ps = conn.prepareStatement("INSERT INTO slots (calId,startTime,endTime,dayOf,dayOfWeek,slotId) values(?,?,?,?,?,?);");
             ps.setString(1, calId);
             ps.setTime(2, Time.valueOf(timeslot.getStartTime()));
-            ps.setDate(3, Date.valueOf(timeslot.getDay())); 
-            ps.setString(4, weekDay);
-            ps.setString(5, timeslot.getId());
+            ps.setTime(3, Time.valueOf(timeslot.getEndTime()));
+            ps.setDate(4, Date.valueOf(timeslot.getDay()));
+            ps.setString(5, weekDay);
+            ps.setString(6, timeslot.getId());
             ps.execute();
             return Optional.of(true);
 
@@ -235,6 +238,25 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
         String slotId = resultSet.getString("slotId");
         
         return new Timeslot(slotId, date.toLocalDate(), startTime.toLocalTime(), endTime.toLocalTime());
+    }
+
+    public Optional<List<Timeslot>> getAll() {
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots;");
+            List<Timeslot> timeslots = new ArrayList<Timeslot>();
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) timeslots.add(generateTimeslot(resultSet));
+
+            resultSet.close();
+            ps.close();
+
+            return Optional.of(timeslots);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
 
 }
