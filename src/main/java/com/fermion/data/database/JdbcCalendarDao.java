@@ -38,7 +38,7 @@ public class JdbcCalendarDao implements CalendarDataSource {
         try {
             Calendar calendarResult;
             //populate the meetings and timeslots
-            PreparedStatement ps = conn.prepareStatement(calendarJoinQuery(calendarId));
+            PreparedStatement ps = calendarJoinQuery(calendarId);
             //returns a set of mega-rows that have some combo of calendar, timeslot and meeting output
             ResultSet resultSet = ps.executeQuery();
             calendarResult = generateCalendar(resultSet);
@@ -63,13 +63,7 @@ public class JdbcCalendarDao implements CalendarDataSource {
             PreparedStatement ps = conn.prepareStatement("SELECT id FROM calendars;");
             ResultSet resultSet = ps.executeQuery();
 
-            while (resultSet.next()) {
-            	PreparedStatement ps2 = calendarJoinQuery(resultSet);
-            	ResultSet resultSet2 = ps2.executeQuery();
-            	while (resultSet2.next()) {
-                	calendars.add(generateCalendar(resultSet2));
-            	}
-            }
+            while (resultSet.next()) calendars.add(generateCalendar(resultSet));
 
             resultSet.close();
             ps.close();
@@ -172,11 +166,17 @@ public class JdbcCalendarDao implements CalendarDataSource {
     }
 
     private PreparedStatement calendarJoinQuery(String calendarId) {
-        PreparedStatement ps = conn.prepareStatement("SELECT  id, calName,  meetings.startTime AS meetingStartHr, meetings.endTime AS meetingEndHr,  meetings.dayOf AS meetingDayOf, " +
-        		  "slots.startTime AS slotStartHr,  slots.endTime AS slotEndHr, slots.dayOf AS slotDayOf, nameMeet, location, dayOfWeek, slotId " +
-        		  "FROM calendars LEFT JOIN slots ON  id  = slots.calId LEFT JOIN meetings ON meetings.startTime = slots.startTime and meetings.dayOf = slots.dayOf and meetings.calId = id;" +
-        		  "WHERE id = ?");
-        ps.setString(1, calendarId);
+        PreparedStatement ps = null;
+        try {
+            ps = conn.prepareStatement(
+                    "SELECT  id, calName,  meetings.startTime AS meetingStartHr, meetings.endTime AS meetingEndHr,  meetings.dayOf AS meetingDayOf, " +
+                            "slots.startTime AS slotStartHr,  slots.endTime AS slotEndHr, slots.dayOf AS slotDayOf, nameMeet, location, dayOfWeek, slotId " +
+                            "FROM calendars LEFT JOIN slots ON  id  = slots.calId LEFT JOIN meetings ON meetings.startTime = slots.startTime and meetings.dayOf = slots.dayOf and meetings.calId = id;" +
+                            "WHERE id = ?");
+            ps.setString(1, calendarId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return ps;
     }
 
