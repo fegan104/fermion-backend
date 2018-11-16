@@ -27,10 +27,12 @@ public class GetCalendarByIdLambda implements RequestHandler<Map<String, Object>
         gson = new GsonBuilder().create();
 
         try {
-            Map<String, Object> queryParams = (Map<String, Object>) input.get("queryStringParameters");
-
+            Map<String, Object> pathParams = (Map<String, Object>) input.get("pathParameters");
+            String parsedId = pathParams.get("id")
+                    .toString();
+            Logger.log(parsedId);
             final CalendarResponseData responseData = calendarDao
-                    .calendarById((String) input.get(queryParams.get("calendarId")))
+                    .calendarById(parsedId)
                     .map(CalendarResponseData::new)
                     .orElse(null);
             return new ApiGatewayResponse(200, gson.toJson(responseData));
