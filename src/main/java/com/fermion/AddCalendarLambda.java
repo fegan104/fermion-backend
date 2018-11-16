@@ -2,28 +2,43 @@ package com.fermion;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.fermion.data.database.JdbcCalendarDao;
+import com.fermion.data.database.JdbcTimeslotDao;
 import com.fermion.data.model.Calendar;
 import com.fermion.data.model.response.ApiGatewayResponse;
 import com.fermion.data.model.response.CalendarResponseData;
-import com.google.gson.*;
+import com.fermion.logger.Logger;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by @author frankegan on 10/31/18.
  */
 public class AddCalendarLambda implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
 
+    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private JdbcCalendarDao calendarDao;
+    private JdbcTimeslotDao timeslotDao;
+    private Gson gson;
+
+
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        for (Map.Entry e : input.entrySet()) {
-            context.getLogger().log(e.getKey() + ": " + e.getValue() + "\n");
-        }
-        Gson gson = new GsonBuilder().create();
+        Logger.init(context);
+
+        calendarDao = new JdbcCalendarDao();
+        timeslotDao = new JdbcTimeslotDao();
+        gson = new GsonBuilder().create();
+
         try {
             JsonObject body = new JsonParser().parse((String) input.get("body")).getAsJsonObject();
             Calendar calendar = new Calendar(
@@ -34,8 +49,18 @@ public class AddCalendarLambda implements RequestHandler<Map<String, Object>, Ap
                     body.get("endHour").getAsInt(),
                     body.get("duration").getAsInt()
             );
+
+            Logger.log("Starting insert");
+            calendarDao.insert(calendar);
+            timeslotDao.insert(calendar.getId(), calendar.getTimeslots()
+                    .values()
+                    .stream()
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList()));
+
+            Logger.log("Writing json response");
             CalendarResponseData calRes = new CalendarResponseData(calendar);
-            context.getLogger().log("Created" + calRes.getId());
+
             return new ApiGatewayResponse(201, gson.toJson(calRes));
         } catch (Exception e) {
             context.getLogger().log(e.toString());

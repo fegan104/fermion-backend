@@ -3,9 +3,11 @@ package com.fermion.data.database;
 import com.fermion.data.model.Calendar;
 import com.fermion.data.model.Meeting;
 import com.fermion.data.model.Timeslot;
+import com.fermion.logger.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +24,10 @@ public class JdbcCalendarDao implements CalendarDataSource {
         try {
             conn = DatabaseUtil.connect();
         } catch (Exception e) {
+            Logger.log(e.getMessage());
+            Arrays.asList(e.getStackTrace()).forEach(it ->
+                    Logger.log(it.toString())
+            );
             conn = null;
         }
     }
@@ -32,7 +38,7 @@ public class JdbcCalendarDao implements CalendarDataSource {
         try {
             Calendar calendarResult;
             //populate the meetings and timeslots
-            PreparedStatement ps = conn.prepareStatement(calendarJoinQuery(calendarId));
+            PreparedStatement ps = calendarJoinQuery(calendarId);
             //returns a set of mega-rows that have some combo of calendar, timeslot and meeting output
             ResultSet resultSet = ps.executeQuery();
             calendarResult = generateCalendar(resultSet);
@@ -89,14 +95,17 @@ public class JdbcCalendarDao implements CalendarDataSource {
 
     @Override
     public Optional<Boolean> insert(Calendar calendar) {
+        if (conn == null) {
+            Logger.log("No connection to database available");
+            return Optional.of(false);
+        }
         try {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM calendars WHERE id = ?;");
             ps.setString(1, calendar.getId());
             ResultSet resultSet = ps.executeQuery();
 
             // already present?
-            while (resultSet.next()) {
-                Calendar c = generateCalendar(resultSet);
+            if (resultSet.next()) {
                 resultSet.close();
                 return Optional.of(false);
             }
@@ -105,8 +114,8 @@ public class JdbcCalendarDao implements CalendarDataSource {
             ps.setString(1, calendar.getId());
             ps.setString(2, "fermion"); //unsure how to "get owner"
             ps.setString(3, calendar.getName());
-            ps.setTime(4, Time.valueOf(calendar.getStartHour()));
-            ps.setTime(5, Time.valueOf(calendar.getEndHour()));
+            ps.setInt(4, calendar.getStartHour().getHour());
+            ps.setInt(5, calendar.getEndHour().getHour());
             ps.setInt(6, calendar.getDuration());
             ps.execute();
             return Optional.of(true);
@@ -156,23 +165,19 @@ public class JdbcCalendarDao implements CalendarDataSource {
         );
     }
 
-    private String calendarJoinQuery(String calendarId) {
-        return "SELECT" +
-                "  id," +
-                "  calName," +
-                "  meeting.startHr AS meetingStartHr," +
-                "  meeting.endHr AS meetingEndHr," +
-                "  meeting.dayOf AS meetingDayOf," +
-                "  slot.startHr AS slotStartHr," +
-                "  slot.endHr AS slotEndHr," +
-                "  slot.dayOf AS slotDayOf," +
-                "  nameMeet," +
-                "  location," +
-                "  dayOfWeek," +
-                "  slotId" +
-                "FROM calendars" +
-                "LEFT JOIN slots ON " + calendarId + " = slots.calId" +
-                "LEFT JOIN meetings ON " + calendarId + " = meetings.calId";
+    private PreparedStatement calendarJoinQuery(String calendarId) {
+        PreparedStatement ps = null;
+        try {
+            ps = conn.prepareStatement(
+                    "SELECT  id, calName,  meetings.startTime AS meetingStartHr, meetings.endTime AS meetingEndHr,  meetings.dayOf AS meetingDayOf, " +
+                            "slots.startTime AS slotStartHr,  slots.endTime AS slotEndHr, slots.dayOf AS slotDayOf, nameMeet, location, dayOfWeek, slotId " +
+                            "FROM calendars LEFT JOIN slots ON  id  = slots.calId LEFT JOIN meetings ON meetings.startTime = slots.startTime and meetings.dayOf = slots.dayOf and meetings.calId = id;" +
+                            "WHERE id = ?");
+            ps.setString(1, calendarId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ps;
     }
 
 }
