@@ -36,19 +36,7 @@ public class GetDayLambda implements RequestHandler<Map<String, Object>, ApiGate
 			JsonObject body = new JsonParser().parse((String) input.get("body")).getAsJsonObject();
 			JsonArray timeslots = body.get("timeslots").getAsJsonArray(); 
 			JsonArray meetings = body.get("meetings").getAsJsonArray();
-			List<TimeslotResponseData> timedata = new List<TimeslotResponseData>();
-
-			if (timeslots != null) { 
-				for (int i=0;i<timeslots.size();i++){
-					
-							timedata.add(timeslots.get(i));
-				}
-			} 
-			DayResponseData dayRes = new DayResponseData(
-					LocalDate.parse(body.get("day").getAsString(), dtf), 
-					);
-			context.getLogger().log("Fetched Day " + dayRes.getDay());
-			return new ApiGatewayResponse(202, gson.toJson(dayRes));
+			return new ApiGatewayResponse (202, null); //return new ApiGatewayResponse(202, gson.toJson(dayRes));
 		} catch (Exception e) {
 			context.getLogger().log(e.toString());
 			Arrays.asList(e.getStackTrace()).forEach(it -> context.getLogger().log(it.toString()));
