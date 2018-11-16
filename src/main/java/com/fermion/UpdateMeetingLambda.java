@@ -2,9 +2,11 @@ package com.fermion;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.fermion.data.database.JdbcMeetingDao;
 import com.fermion.data.model.Meeting;
 import com.fermion.data.model.response.ApiGatewayResponse;
 import com.fermion.data.model.response.MeetingResponseData;
+import com.fermion.logger.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -20,14 +22,16 @@ import java.util.Map;
  * Created by @author frankegan on 11/9/18.
  */
 public class UpdateMeetingLambda implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
+	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	private DateTimeFormatter timef = DateTimeFormatter.ofPattern("HH:mm:ss");
+	private JdbcMeetingDao meetingDao;
+	private Gson gson;
+
 	@Override
 	public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		DateTimeFormatter timef = DateTimeFormatter.ofPattern("HH:mm:ss");
-		for (Map.Entry e : input.entrySet()) {
-			context.getLogger().log(e.getKey() + ": " + e.getValue() + "\n");
-		}
-		Gson gson = new GsonBuilder().create();
+		Logger.init(context);
+		meetingDao = new JdbcMeetingDao();
+		gson = new GsonBuilder().create();
 		try {
 			JsonObject body = new JsonParser().parse((String) input.get("body")).getAsJsonObject();
 			Meeting meeting = new Meeting(
@@ -37,7 +41,14 @@ public class UpdateMeetingLambda implements RequestHandler<Map<String, Object>, 
 					body.get("guest").getAsString(),
 					body.get("location").getAsString()
 					);
+			String calId = body.get("calID").getAsString();
+
+			Logger.log("Starting update meeting");
+			meetingDao.update(calId, meeting);
+
+			Logger.log("Writing json response");
 			MeetingResponseData meetingRes = new MeetingResponseData(meeting);
+
 			context.getLogger().log("Updated Meeting with " + meetingRes.getGuest());
 			return new ApiGatewayResponse(202, gson.toJson(meetingRes));
 		} catch (Exception e) {
