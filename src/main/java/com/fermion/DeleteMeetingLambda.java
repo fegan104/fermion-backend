@@ -29,6 +29,7 @@ public class DeleteMeetingLambda implements RequestHandler<Map<String, Object>, 
 		Logger.init(context);
 		meetingDao = new JdbcMeetingDao();
 		gson = new GsonBuilder().create();
+		input.forEach((key, value) -> Logger.log(key + ": " + value));
 
 		try {
 			JsonObject body = new JsonParser().parse((String) input.get("body")).getAsJsonObject();
@@ -39,11 +40,10 @@ public class DeleteMeetingLambda implements RequestHandler<Map<String, Object>, 
 					body.get("guest").getAsString(),
 					body.get("location").getAsString()
 					);
-			//String calId = body.get("calId").getAsString();
+			String calId = body.get("calendar").getAsString();
 
 			Logger.log("Starting delete meeting");
-			// The sql in the dao might need to be changed to add calID
-			meetingDao.delete(meeting.getDay(), meeting.getStartTime());
+			meetingDao.delete(meeting.getDay(), meeting.getStartTime(), calId);
 
 			Logger.log("Writing json response");
 			MeetingResponseData meetingRes = new MeetingResponseData(meeting);

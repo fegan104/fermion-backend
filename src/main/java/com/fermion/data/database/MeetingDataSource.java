@@ -13,6 +13,6 @@ import java.util.Optional;
 public interface MeetingDataSource {
     Optional<List<Meeting>> meetingsByCalendar(String calendarId);
 	Optional<Boolean> update(String calId, Meeting meeting);
-	Optional<Boolean> delete(LocalDate date, LocalTime time);
+	Optional<Boolean> delete(LocalDate date, LocalTime time, String calendarId);
 	Optional<Boolean> insert(String calId, Meeting meeting);
 }
