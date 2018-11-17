@@ -35,7 +35,7 @@ public class JdbcCalendarDao implements CalendarDataSource {
         try {
             Calendar calendarResult = null;
             //populate the meetings and timeslots
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM calendars WHERE id = ?;");//calendarJoinQuery(calendarId);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM calendars WHERE id = ?;");
             ps.setString(1, calendarId);
             //returns a set of mega-rows that have some combo of calendar, timeslot and meeting output
             ResultSet resultSet = ps.executeQuery();
@@ -150,16 +150,16 @@ public class JdbcCalendarDao implements CalendarDataSource {
             if (resultSet.getString("slotId") != null) {
                 timeslots.add(new Timeslot(
                         resultSet.getString("slotId"),
-                        resultSet.getDate("slotDayOf").toLocalDate(),
-                        resultSet.getTime("slotStartHr").toLocalTime(),
-                        resultSet.getTime("slotEndHr").toLocalTime()));
+                        resultSet.getDate("dayOf").toLocalDate(),
+                        resultSet.getTime("startHr").toLocalTime(),
+                        resultSet.getTime("endHr").toLocalTime()));
             }
             //Add meeting data from this row to the list
             if (resultSet.getString("nameMeet") != null) {
                 meetings.add(new Meeting(
-                        resultSet.getTime("meetingStartHr").toLocalTime(),
-                        resultSet.getTime("meetingEndHr").toLocalTime(),
-                        resultSet.getDate("meetingDayOf").toLocalDate(),
+                        resultSet.getTime("startHr").toLocalTime(),
+                        resultSet.getTime("endHr").toLocalTime(),
+                        resultSet.getDate("dayOf").toLocalDate(),
                         resultSet.getString("nameMeet"),
                         resultSet.getString("location")));
             }
@@ -173,21 +173,6 @@ public class JdbcCalendarDao implements CalendarDataSource {
                 meetings.stream().collect(groupingBy(Meeting::getDay))
         );
     }
-
-    private PreparedStatement calendarJoinQuery(String calendarId) {
-        PreparedStatement ps = null;
-        try {
-            ps = conn.prepareStatement(
-                    "SELECT id, calName, meetings.startTime AS meetingStartHr, meetings.endTime AS meetingEndHr, meetings.dayOf AS meetingDayOf, slots.startTime AS slotStartHr, slots.endTime AS slotEndHr, slots.dayOf AS slotDayOf, nameMeet, location, dayOfWeek, slotId" +
-                            "FROM calendars LEFT JOIN slots ON id = slots.calId LEFT JOIN meetings ON meetings.startTime = slots.startTime AND meetings.dayOf = slots.dayOf AND meetings.calId = id" +
-                            "WHERE id = ?;");
-            ps.setString(1, calendarId);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return ps;
-    }
-
 }
 
 

@@ -11,7 +11,7 @@ import java.util.Optional;
  * Created by @author frankegan on 10/30/18.
  */
 public interface MeetingDataSource {
-    Optional<List<Meeting>> meetingByCalendar(String calendarId);
+    Optional<List<Meeting>> meetingsByCalendar(String calendarId);
 	Optional<Boolean> update(String calId, Meeting meeting);
 	Optional<Boolean> delete(LocalDate date, LocalTime time);
 	Optional<Boolean> insert(String calId, Meeting meeting);

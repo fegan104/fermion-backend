@@ -29,7 +29,7 @@ public class JdbcMeetingDao implements MeetingDataSource {
 	
 	
     @Override
-    public Optional<List<Meeting>> meetingByCalendar(String calendarId) {
+    public Optional<List<Meeting>> meetingsByCalendar(String calendarId) {
     	try {
     		PreparedStatement ps = conn.prepareStatement("SELECT * FROM meetings WHERE calId = ?;");
     		ps.setString(1, calendarId);
