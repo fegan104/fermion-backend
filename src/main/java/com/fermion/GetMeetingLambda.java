@@ -41,7 +41,7 @@ public class GetMeetingLambda implements RequestHandler<Map<String, Object>, Api
 			String calId = body.get("calID").getAsString();
 
 			Logger.log("Starting get meetings for calID"+calId);
-			meetingDao.meetingByCalendar(calId);
+			meetingDao.meetingsByCalendar(calId);
 
 			Logger.log("Writing json response");
 			MeetingResponseData meetingRes = new MeetingResponseData(meeting);

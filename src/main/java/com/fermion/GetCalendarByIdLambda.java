@@ -52,7 +52,7 @@ public class GetCalendarByIdLambda implements RequestHandler<Map<String, Object>
                     .orElse(new ArrayList<>());
 
             final List<Meeting> meetingData = meetingDao
-                    .meetingByCalendar(parsedId)
+                    .meetingsByCalendar(parsedId)
                     .orElse(new ArrayList<>());
 
             Logger.log(timeslotData.toString());
