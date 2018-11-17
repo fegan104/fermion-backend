@@ -37,9 +37,9 @@ public class JdbcMeetingDao implements MeetingDataSource {
     		List<Meeting> meetings = new ArrayList<>();
     		while (resultSet.next()) {
                 meetings.add(new Meeting(
-                        resultSet.getTime("meetingStartHr").toLocalTime(),
-                        resultSet.getTime("meetingEndHr").toLocalTime(),
-                        resultSet.getDate("meetingDayOf").toLocalDate(),
+                        resultSet.getTime("startTime").toLocalTime(),
+                        resultSet.getTime("endTime").toLocalTime(),
+                        resultSet.getDate("dayOf").toLocalDate(),
                         resultSet.getString("nameMeet"),
                         resultSet.getString("location")));
             }
@@ -99,18 +99,18 @@ public class JdbcMeetingDao implements MeetingDataSource {
     @Override
     public Optional<Boolean> insert(String calId, Meeting meeting) {
         try {
-        	PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE startTime=? AND dayOf=?;");
-            ps.setTime(1, Time.valueOf(meeting.getStartTime()));
-            ps.setDate(2, Date.valueOf(meeting.getDay()));
-            ResultSet resultSet = ps.executeQuery();
-            
-            // already present? don't insert it.
-            while (resultSet.next()) {
-                resultSet.close();
-                return Optional.of(false); 
-            }
+//        	PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE startTime=? AND dayOf=?;");
+//            ps.setTime(1, Time.valueOf(meeting.getStartTime()));
+//            ps.setDate(2, Date.valueOf(meeting.getDay()));
+//            ResultSet resultSet = ps.executeQuery();
+//
+//            // already present? don't insert it.
+//            while (resultSet.next()) {
+//                resultSet.close();
+//                return Optional.of(false);
+//            }
 
-            ps = conn.prepareStatement("INSERT INTO slots (calId,startTime,endTime,dayOf,nameMeet,location) values(?,?,?,?,?,?);");
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO meetings (calId,startTime,endTime,dayOf,nameMeet,location) values(?,?,?,?,?,?);");
             ps.setString(1, calId);
             ps.setTime(2, Time.valueOf(meeting.getStartTime()));
             ps.setTime(3, Time.valueOf(meeting.getEndTime()));
