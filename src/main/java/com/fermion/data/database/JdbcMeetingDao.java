@@ -98,6 +98,22 @@ public class JdbcMeetingDao implements MeetingDataSource {
     }
 
     @Override
+    public Optional<Boolean> deleteByCalendar(String calendarId) {
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM meetings WHERE calId=?;");
+            ps.setString(1, calendarId);
+            int numAffected = ps.executeUpdate();
+            ps.close();
+
+            return Optional.of(numAffected == 1);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public Optional<Boolean> insert(String calId, Meeting meeting) {
         try {
 //        	PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE startTime=? AND dayOf=?;");

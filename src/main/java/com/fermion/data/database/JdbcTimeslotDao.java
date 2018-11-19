@@ -213,7 +213,22 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
         }        
     }
 
-    
+    @Override
+    public Optional<Boolean> deleteByCalendar(String calendarId) {
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM slots WHERE calId = ?;");
+            ps.setString(1, calendarId);
+            int numAffected = ps.executeUpdate();
+            ps.close();
+
+            return Optional.of(numAffected == 1);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
     @Override
     public Optional<Boolean> delete(DayOfWeek dayOfWeek, LocalDate day, LocalTime time) {
     	try {

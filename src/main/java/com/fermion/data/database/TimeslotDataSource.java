@@ -21,5 +21,6 @@ public interface TimeslotDataSource {
 	Optional<Boolean> insert(String calId, List<Timeslot> timeslots);
 	Optional<Boolean> update(String calId, Timeslot timeslot);
     Optional<Boolean> delete(String id);
+    Optional<Boolean> deleteByCalendar(String calendarId);
     Optional<Boolean> delete(@Nullable DayOfWeek dayOfWeek, @Nullable LocalDate day, @Nullable LocalTime time);
 }

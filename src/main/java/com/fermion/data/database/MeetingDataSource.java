@@ -14,5 +14,6 @@ public interface MeetingDataSource {
     Optional<List<Meeting>> meetingsByCalendar(String calendarId);
 	Optional<Boolean> update(String calId, Meeting meeting);
 	Optional<Boolean> delete(String calendarId, LocalDate date, LocalTime time);
+	Optional<Boolean> deleteByCalendar(String calendarId);
 	Optional<Boolean> insert(String calId, Meeting meeting);
 }
