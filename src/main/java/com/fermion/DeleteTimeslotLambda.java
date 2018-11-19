@@ -5,6 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fermion.data.model.Timeslot;
 import com.fermion.data.model.response.ApiGatewayResponse;
 import com.fermion.data.model.response.TimeslotResponseData;
+import com.fermion.util.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -22,26 +23,26 @@ import java.util.Map;
 public class DeleteTimeslotLambda implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
 	@Override
 	public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
+		Logger.init(context);
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		DateTimeFormatter timef = DateTimeFormatter.ofPattern("HH:mm:ss");
+		DateTimeFormatter timef = DateTimeFormatter.ofPattern("HH:mm");
 		for (Map.Entry e : input.entrySet()) {
-			context.getLogger().log(e.getKey() + ": " + e.getValue() + "\n");
+			context.getLogger().log(e.getKey() + ": " + e.getValue());
 		}
 		Gson gson = new GsonBuilder().create();
 		try {
 			JsonObject body = new JsonParser().parse((String) input.get("body")).getAsJsonObject();
 			Timeslot timeslot = new Timeslot(
 					body.get("id").getAsString(),
-					LocalDate.parse(body.get("localDate").getAsString(), dtf),
+					LocalDate.parse(body.get("date").getAsString(), dtf),
 					LocalTime.parse(body.get("startTime").getAsString(), timef),
-					LocalTime.parse(body.get("endTime").getAsString(), timef)
-					);
+					LocalTime.parse(body.get("endTime").getAsString(), timef));
 			TimeslotResponseData timeRes = new TimeslotResponseData(timeslot);
 			context.getLogger().log("Deleted" + timeRes.getId());
 			return new ApiGatewayResponse(202, gson.toJson(timeRes));
 		} catch (Exception e) {
 			context.getLogger().log(e.toString());
-			Arrays.asList(e.getStackTrace()).forEach(it -> context.getLogger().log(it.toString()));
+			Arrays.asList(e.getStackTrace()).forEach(it -> Logger.log(it.toString()));
 			return new ApiGatewayResponse(400, gson.toJson(e.toString()));
 		}
 	}

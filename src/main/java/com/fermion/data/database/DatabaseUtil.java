@@ -1,6 +1,6 @@
 package com.fermion.data.database;
 
-import com.fermion.logger.Logger;
+import com.fermion.util.Logger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

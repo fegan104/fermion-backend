@@ -3,7 +3,7 @@ package com.fermion.data.database;
 import com.fermion.data.model.Calendar;
 import com.fermion.data.model.Meeting;
 import com.fermion.data.model.Timeslot;
-import com.fermion.logger.Logger;
+import com.fermion.util.Logger;
 
 import java.sql.*;
 import java.util.*;

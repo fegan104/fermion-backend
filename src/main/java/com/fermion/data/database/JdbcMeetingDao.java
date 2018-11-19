@@ -80,11 +80,12 @@ public class JdbcMeetingDao implements MeetingDataSource {
     }
 
     @Override
-    public Optional<Boolean> delete(LocalDate date, LocalTime time) {
+    public Optional<Boolean> delete(String calendarId, LocalDate date, LocalTime time) {
         try {
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM meetings WHERE startTime=? AND dayOf=?;");
-            ps.setTime(1, Time.valueOf(time));
-            ps.setDate(2, Date.valueOf(date));
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM meetings WHERE calId=? AND startTime=? AND dayOf=?;");
+            ps.setString(1, calendarId);
+            ps.setTime(2, Time.valueOf(time));
+            ps.setDate(3, Date.valueOf(date));
             int numAffected = ps.executeUpdate();
             ps.close();
 

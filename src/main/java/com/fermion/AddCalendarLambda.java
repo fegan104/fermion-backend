@@ -7,7 +7,7 @@ import com.fermion.data.database.JdbcTimeslotDao;
 import com.fermion.data.model.Calendar;
 import com.fermion.data.model.response.ApiGatewayResponse;
 import com.fermion.data.model.response.CalendarResponseData;
-import com.fermion.logger.Logger;
+import com.fermion.util.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
