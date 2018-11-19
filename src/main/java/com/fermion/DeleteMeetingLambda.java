@@ -8,7 +8,6 @@ import com.fermion.util.Constants;
 import com.fermion.util.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -30,9 +29,10 @@ public class DeleteMeetingLambda implements RequestHandler<Map<String, Object>, 
 		Logger.init(context);
 		meetingDao = new JdbcMeetingDao();
 		gson = new GsonBuilder().create();
+		input.forEach((key, value) -> Logger.log(key + ": " + value));
 
 		try {
-			HashMap<String, String> queryParams = (HashMap<String, String>) input.get(Constants.QUERY_STRING_PARAMS);
+HashMap<String, String> queryParams = (HashMap<String, String>) input.get(Constants.QUERY_STRING_PARAMS);
 			String calendarId = queryParams.get("calendarId");
 			LocalDate date = LocalDate.parse(queryParams.get("date"), dtf);
 			LocalTime startTime = LocalTime.parse(queryParams.get("startTime"), timef);
