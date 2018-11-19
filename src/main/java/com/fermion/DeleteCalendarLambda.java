@@ -26,8 +26,9 @@ public class DeleteCalendarLambda implements RequestHandler<Map<String, Object>,
         CalendarDataSource calendarDao = new JdbcCalendarDao();
         Gson gson = new GsonBuilder().create();
         try {
-            HashMap<String, String> queryParams = (HashMap<String, String>) input.get(Constants.QUERY_STRING_PARAMS);
-            Calendar calendar = calendarDao.calendarById(queryParams.get("calendarId")).orElse(null);
+            HashMap<String, String> pathParams = (HashMap<String, String>) input.get(Constants.PATH_PARAMS);
+            Logger.log(pathParams.toString());
+            Calendar calendar = calendarDao.calendarById(pathParams.get("id")).orElse(null);
             calendarDao.delete(calendar.getId());
             CalendarResponseData calRes = new CalendarResponseData(calendar);
             context.getLogger().log("Deleted " + calRes.getId());
