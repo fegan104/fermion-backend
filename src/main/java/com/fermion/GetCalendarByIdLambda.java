@@ -10,6 +10,7 @@ import com.fermion.data.model.Meeting;
 import com.fermion.data.model.Timeslot;
 import com.fermion.data.model.response.ApiGatewayResponse;
 import com.fermion.data.model.response.CalendarResponseData;
+import com.fermion.util.Constants;
 import com.fermion.util.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,7 +40,7 @@ public class GetCalendarByIdLambda implements RequestHandler<Map<String, Object>
         gson = new GsonBuilder().create();
 
         try {
-            Map<String, Object> pathParams = (Map<String, Object>) input.get("pathParameters");
+            Map<String, Object> pathParams = (Map<String, Object>) input.get(Constants.PATH_PARAMS);
             String parsedId = pathParams.get("id").toString();
             Logger.log(parsedId);
 

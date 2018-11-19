@@ -2,47 +2,41 @@ package com.fermion;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.fermion.data.database.CalendarDataSource;
+import com.fermion.data.database.JdbcCalendarDao;
 import com.fermion.data.model.Calendar;
 import com.fermion.data.model.response.ApiGatewayResponse;
 import com.fermion.data.model.response.CalendarResponseData;
+import com.fermion.util.Constants;
+import com.fermion.util.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by @author frankegan on 11/9/18.
  */
 public class DeleteCalendarLambda implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
-	@Override
-	public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		for (Map.Entry e : input.entrySet()) {
-			context.getLogger().log(e.getKey() + ": " + e.getValue() + "\n");
-		}
-		Gson gson = new GsonBuilder().create();
-		try {
-			JsonObject body = new JsonParser().parse((String) input.get("body")).getAsJsonObject();
-			Calendar calendar = new Calendar(
-					body.get("name").getAsString(),
-					LocalDate.parse(body.get("startDate").getAsString(), dtf),
-					LocalDate.parse(body.get("endDate").getAsString(), dtf),
-					body.get("startHour").getAsInt(),
-					body.get("endHour").getAsInt(),
-					body.get("duration").getAsInt()
-					);
-			CalendarResponseData calRes = new CalendarResponseData(calendar);
-			context.getLogger().log("Deleted" + calRes.getId());
-			return new ApiGatewayResponse(202, gson.toJson(calRes));
-		} catch (Exception e) {
-			context.getLogger().log(e.toString());
-			Arrays.asList(e.getStackTrace()).forEach(it -> context.getLogger().log(it.toString()));
-			return new ApiGatewayResponse(400, gson.toJson(e.toString()));
-		}
-	}
+    @Override
+    public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
+        Logger.init(context);
+        CalendarDataSource calendarDao = new JdbcCalendarDao();
+        Gson gson = new GsonBuilder().create();
+        try {
+            HashMap<String, String> pathParams = (HashMap<String, String>) input.get(Constants.PATH_PARAMS);
+            Logger.log(pathParams.toString());
+            Calendar calendar = calendarDao.calendarById(pathParams.get("id")).orElse(null);
+            calendarDao.delete(calendar.getId());
+            CalendarResponseData calRes = new CalendarResponseData(calendar);
+            context.getLogger().log("Deleted " + calRes.getId());
+            return new ApiGatewayResponse(202, gson.toJson(calRes));
+        } catch (Exception e) {
+            context.getLogger().log(e.toString());
+            Arrays.asList(e.getStackTrace()).forEach(it -> Logger.log(it.toString()));
+            return new ApiGatewayResponse(400, gson.toJson(e.toString()));
+        }
+    }
 }
