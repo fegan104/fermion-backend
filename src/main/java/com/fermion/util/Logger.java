@@ -1,4 +1,4 @@
-package com.fermion.logger;
+package com.fermion.util;
 
 import com.amazonaws.services.lambda.runtime.Context;
 

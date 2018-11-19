@@ -5,7 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fermion.data.database.JdbcCalendarDao;
 import com.fermion.data.model.response.ApiGatewayResponse;
 import com.fermion.data.model.response.CalendarResponseData;
-import com.fermion.logger.Logger;
+import com.fermion.util.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
