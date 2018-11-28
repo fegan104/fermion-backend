@@ -54,32 +54,6 @@ public class JdbcMeetingDao implements MeetingDataSource {
     }
 
     @Override
-    public Optional<Boolean> update(String calId, Meeting meeting) {
-        try {
-            PreparedStatement ps = conn.prepareStatement("UPDATE meetings SET calId=?, endTime=?, nameMeet=?, location=? WHERE startTime=? AND dayOf=?;");
-        	ps.setString(1, calId);
-        	ps.setTime(2, Time.valueOf(meeting.getEndTime()));
-        	ps.setString(3, meeting.getGuest());     
-        	ps.setString(4, meeting.getLocation());
-        	ps.setTime(5, Time.valueOf(meeting.getStartTime()));
-        	ps.setDate(6, Date.valueOf(meeting.getDay()));
-
-        	int rowsUpdated = ps.executeUpdate();
-        	if (rowsUpdated > 0) {
-        		//successfully updated
-        		return Optional.of(true);
-        	}
-        	//failed to update
-        	return Optional.of(false);
-        	
-        	
-        } catch (Exception e) {
-        	e.printStackTrace();
-            return Optional.of(false);
-        }
-    }
-
-    @Override
     public Optional<Boolean> delete(String calendarId, LocalDate date, LocalTime time) {
         try {
             PreparedStatement ps = conn.prepareStatement("DELETE FROM meetings WHERE calId=? AND startTime=? AND dayOf=?;");
