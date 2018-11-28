@@ -12,6 +12,8 @@ import java.util.Map;
 public class DeleteDayLambda implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
-        return null;
+        //delete from slots where dayOf = [date] and calId = [calendar ID];
+    	//delete from meetings where dayOf = [date] and calId = [calendar ID];
+    	return null;
     }
 }
