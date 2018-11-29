@@ -50,7 +50,7 @@ public class DeleteTimeslotLambda implements RequestHandler<Map<String, Object>,
             if (dayOfWeekParam != null) {
                 dayOfWeek = Arrays.stream(DayOfWeek.values())
                         .filter(d -> {
-                            String sub = d.toString().substring(0, 2);
+                            String sub = d.toString().substring(0, 3);
                             return sub.equals(dayOfWeekParam);
                         })
                         .findFirst()
