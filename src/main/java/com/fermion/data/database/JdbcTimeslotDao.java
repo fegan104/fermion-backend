@@ -1,6 +1,7 @@
 package com.fermion.data.database;
 
 import com.fermion.data.model.Timeslot;
+import com.fermion.util.Logger;
 
 import javax.annotation.Nullable;
 import java.sql.*;
@@ -113,23 +114,170 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
 
     @Override
     public Optional<List<Timeslot>> delete(
+            String calendarId,
             @Nullable DayOfWeek dayOfWeek,
             @Nullable LocalDate day,
             @Nullable LocalTime time
     ) {
         try {
-            PreparedStatement psSelect;
-            PreparedStatement psDelete;
-//            if (dayOfWeek == null)
-//                PreparedStatement psRead = conn.prepareStatement("SELECT * FROM slots WHERE dayOf = ? OR date = ? AND startTime = ?;");
+            PreparedStatement psSelect = null;
+            PreparedStatement psDelete = null;
+            StringBuilder query = new StringBuilder();
 
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM slots WHERE dayOf = ? AND startTime = ?;");
-            ps.setDate(1, Date.valueOf(day));
-            ps.setTime(2, Time.valueOf(time));
-            int numAffected = ps.executeUpdate();
-            ps.close();
+            if (dayOfWeek == null) {
+                if (day == null) {
+                    if (time == null) {
+                        //No filters nothing happens...
+                    } else {
+                        query.append(
+                                "FROM" +
+                                "  slots " +
+                                "WHERE" +
+                                "  calId=?" +
+                                "  AND startTime=?;");
+                        psDelete = conn.prepareStatement("DELETE " + query);
+                        psSelect = conn.prepareStatement("SELECT * " + query);
 
-            return Optional.empty();
+                        psDelete.setString(1, calendarId);
+                        psSelect.setString(1, calendarId);
+                        psDelete.setTime(2, Time.valueOf(time));
+                        psSelect.setTime(2, Time.valueOf(time));
+                    }
+                } else {
+                    if (time == null) {
+                        query.append(
+                                "FROM" +
+                                "  slots " +
+                                "WHERE" +
+                                "  calId=?" +
+                                "  AND dayOf=?");
+                        psDelete = conn.prepareStatement("DELETE " + query);
+                        psSelect = conn.prepareStatement("SELECT * " + query);
+
+                        psDelete.setString(1, calendarId);
+                        psSelect.setString(1, calendarId);
+                        psDelete.setDate(2, Date.valueOf(day));
+                        psSelect.setDate(2, Date.valueOf(day));
+                    } else {
+                        query.append(
+                                "FROM" +
+                                "  slots " +
+                                "WHERE" +
+                                "  calId=?" +
+                                "  AND startTime=?" +
+                                "  AND dayOf=?;");
+                        psDelete = conn.prepareStatement("DELETE " + query);
+                        psSelect = conn.prepareStatement("SELECT * " + query);
+
+                        psDelete.setString(1, calendarId);
+                        psSelect.setString(1, calendarId);
+                        psDelete.setTime(2, Time.valueOf(time));
+                        psSelect.setTime(2, Time.valueOf(time));
+                        psDelete.setDate(3, Date.valueOf(day));
+                        psSelect.setDate(3, Date.valueOf(day));
+                    }
+                }
+            } else {
+                if (day == null) {
+                    if (time == null) {
+                        query.append(
+                                "FROM" +
+                                "  slots " +
+                                "WHERE" +
+                                "  dayOfWeek=?" +
+                                "  AND calId=?;");
+                        psDelete = conn.prepareStatement("DELETE " + query);
+                        psSelect = conn.prepareStatement("SELECT * " + query);
+
+                        psDelete.setString(1, dayOfWeek.toString().substring(0, 2));
+                        psSelect.setString(1, dayOfWeek.toString().substring(0, 2));
+                        psDelete.setString(2, calendarId);
+                        psSelect.setString(2, calendarId);
+                    } else {
+                        query.append(
+                                "FROM" +
+                                "  slots " +
+                                "WHERE" +
+                                "  calId=?" +
+                                "  AND startTime=?" +
+                                "  OR (dayOfWeek = ? AND calId = ?);");
+                        psDelete = conn.prepareStatement("DELETE " + query);
+                        psSelect = conn.prepareStatement("SELECT * " + query);
+
+                        psDelete.setString(1, calendarId);
+                        psSelect.setString(1, calendarId);
+                        psDelete.setTime(2, Time.valueOf(time));
+                        psSelect.setTime(2, Time.valueOf(time));
+                        psDelete.setString(3, dayOfWeek.toString().substring(0, 2));
+                        psSelect.setString(3, dayOfWeek.toString().substring(0, 2));
+                        psDelete.setString(4, calendarId);
+                        psSelect.setString(4, calendarId);
+                    }
+                } else {
+                    if (time == null) {
+                        query.append(
+                                "FROM" +
+                                "  slots " +
+                                "WHERE" +
+                                "  calId=?" +
+                                "  AND dayOf=?" +
+                                "  OR (dayOfWeek=? AND calId=?);");
+                        psDelete = conn.prepareStatement("DELETE " + query);
+                        psSelect = conn.prepareStatement("SELECT * " + query);
+
+                        psDelete.setString(1, calendarId);
+                        psSelect.setString(1, calendarId);
+                        psDelete.setDate(2, Date.valueOf(day));
+                        psSelect.setDate(2, Date.valueOf(day));
+                        psDelete.setString(3, dayOfWeek.toString().substring(0, 2));
+                        psSelect.setString(3, dayOfWeek.toString().substring(0, 2));
+                        psDelete.setString(4, calendarId);
+                        psSelect.setString(4, calendarId);
+                    } else {
+                        query.append(
+                                "FROM" +
+                                "  slots " +
+                                "WHERE" +
+                                "  calId = ?" +
+                                "  AND startTime = ?" +
+                                "  AND dayOf = ?" +
+                                "  OR (dayOfWeek = ? AND calId = ?);");
+
+                        psDelete = conn.prepareStatement("DELETE " + query);
+                        psSelect = conn.prepareStatement("SELECT * " + query);
+
+                        psDelete.setString(1, calendarId);
+                        psSelect.setString(1, calendarId);
+                        psDelete.setTime(2, Time.valueOf(time));
+                        psSelect.setTime(2, Time.valueOf(time));
+                        psDelete.setDate(3, Date.valueOf(day));
+                        psSelect.setDate(3, Date.valueOf(day));
+                        psDelete.setString(4, dayOfWeek.toString().substring(0, 2));
+                        psSelect.setString(4, dayOfWeek.toString().substring(0, 2));
+                        psDelete.setString(5, calendarId);
+                        psSelect.setString(5, calendarId);
+                    }
+                }
+            }
+            List<Timeslot> closedTimeslots = new ArrayList<>();
+            Logger.log("SELECT * " + query.toString());
+            ResultSet timeslotQuery = psSelect.executeQuery();
+
+            //Add all the soon-to-be deleted timeslots to the result
+            while (timeslotQuery.next()) {
+                closedTimeslots.add(new Timeslot(
+                        timeslotQuery.getString("slotId"),
+                        timeslotQuery.getDate("dayOf").toLocalDate(),
+                        timeslotQuery.getTime("startTime").toLocalTime(),
+                        timeslotQuery.getTime("endTime").toLocalTime()
+                ));
+            }
+
+            psDelete.execute();
+            psSelect.close();
+            psDelete.close();
+
+            return Optional.of(closedTimeslots);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -144,25 +292,6 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
         String slotId = resultSet.getString("slotId");
 
         return new Timeslot(slotId, date.toLocalDate(), startTime.toLocalTime(), endTime.toLocalTime());
-    }
-
-    public Optional<List<Timeslot>> getAll() {
-        try {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots;");
-            List<Timeslot> timeslots = new ArrayList<Timeslot>();
-            ResultSet resultSet = ps.executeQuery();
-
-            while (resultSet.next()) timeslots.add(generateTimeslot(resultSet));
-
-            resultSet.close();
-            ps.close();
-
-            return Optional.of(timeslots);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
     }
 
 }
