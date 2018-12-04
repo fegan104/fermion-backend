@@ -44,12 +44,18 @@ public class Calendar {
     public Calendar(
             String id,
             String name,
+            LocalTime startHour,
+            LocalTime endHour,
+            int duration,
             Map<LocalDate, List<Timeslot>> timeslots,
             Map<LocalDate, List<Meeting>> meetings
     ) {
         this.id = id;
         this.name = name;
+        this.startHour = startHour;
+        this.endHour = endHour;
         this.timeslots = timeslots;
+        this.duration = duration;
         this.meetings = meetings;
     }
 
@@ -139,5 +145,20 @@ public class Calendar {
 
     public void setMeetings(Map<LocalDate, List<Meeting>> meetings) {
         this.meetings = meetings;
+    }
+
+    @Override
+    public String toString() {
+        return "Calendar{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", timeslots=" + timeslots +
+                ", meetings=" + meetings +
+                ", startDay=" + startDay +
+                ", endDay=" + endDay +
+                ", startHour=" + startHour +
+                ", endHour=" + endHour +
+                ", duration=" + duration +
+                '}';
     }
 }
