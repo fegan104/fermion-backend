@@ -6,6 +6,7 @@ import com.fermion.data.model.Timeslot;
 import com.fermion.util.Logger;
 
 import java.sql.*;
+import java.time.LocalTime;
 import java.util.*;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -71,7 +72,10 @@ public class JdbcCalendarDao implements CalendarDataSource {
             while (calQuery.next()) {
                 String id = calQuery.getString("id");
                 String calName = calQuery.getString("calName");
-                calendars.add(new Calendar(id, calName, new HashMap<>(), new HashMap<>()));
+                int duration = calQuery.getInt("duration");
+                LocalTime startHr = calQuery.getTime("startHr").toLocalTime();
+                LocalTime endHr = calQuery.getTime("endHr").toLocalTime();
+                calendars.add(new Calendar(id, calName, startHr, endHr, duration, new HashMap<>(), new HashMap<>()));
             }
 
             calQuery.close();
@@ -142,6 +146,9 @@ public class JdbcCalendarDao implements CalendarDataSource {
     private Calendar generateCalendar(ResultSet resultSet) throws SQLException {
         String calendarId = resultSet.getString("id");
         String calName = resultSet.getString("calName");
+        long startHr = resultSet.getLong("startHr");
+        long endHr = resultSet.getLong("endHr");
+        int duration = resultSet.getInt("duration");
 
         List<Timeslot> timeslots = new ArrayList<>();
         List<Meeting> meetings = new ArrayList<>();
@@ -169,6 +176,9 @@ public class JdbcCalendarDao implements CalendarDataSource {
         return new Calendar(
                 calendarId,
                 calName,
+                LocalTime.of((int) startHr, 0, 0),
+                LocalTime.of((int) endHr, 0, 0),
+                duration,
                 timeslots.stream().collect(groupingBy(Timeslot::getDay)),
                 meetings.stream().collect(groupingBy(Meeting::getDay))
         );

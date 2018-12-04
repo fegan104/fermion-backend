@@ -34,17 +34,20 @@ public class AddDayLambda implements RequestHandler<Map<String, Object>, ApiGate
 
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
+        Logger.init(context);
         Map<String, String> pathParams = (Map<String, String>) input.get(Constants.QUERY_STRING_PARAMS);
         Logger.log(pathParams.toString());
         String calendarId = pathParams.getOrDefault("calendarId", "");
         String dateString = pathParams.getOrDefault("date", "");
         LocalDate localDate = LocalDate.parse(dateString, dtf);
+        Logger.log("LocalDate: " + localDate);
 
         calendarDao = new JdbcCalendarDao();
         timeslotDao = new JdbcTimeslotDao();
 
         Calendar calendar = calendarDao.calendarById(calendarId).orElse(null);
         if (calendar == null) return new ApiGatewayResponse(400, "No calendar found with that ID.");
+        Logger.log("Calendar: " + calendar);
 
         List<Timeslot> newSlots = generateTimeslots(
                 localDate,
@@ -65,7 +68,7 @@ public class AddDayLambda implements RequestHandler<Map<String, Object>, ApiGate
         Calendar temp = new Calendar(
                 "",
                 date,
-                date,
+                date.plusDays(1),
                 startHour.getHour(),
                 endHour.getHour(),
                 duration);
