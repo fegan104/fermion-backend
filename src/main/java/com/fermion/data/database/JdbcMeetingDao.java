@@ -112,7 +112,11 @@ public class JdbcMeetingDao implements MeetingDataSource {
             ps.setTime(3, Time.valueOf(meeting.getEndTime()));
             ps.setDate(4, Date.valueOf(meeting.getDay())); 
             ps.setString(5, meeting.getGuest());
-            ps.setString(6, meeting.getLocation());
+            if (meeting.getLocation() != null) {
+                ps.setString(6, meeting.getLocation());            	
+            } else {
+                ps.setString(6, "(no location)");            	
+            }
             ps.execute();
             return Optional.of(true);
 
