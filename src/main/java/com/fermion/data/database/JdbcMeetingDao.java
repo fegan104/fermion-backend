@@ -95,16 +95,6 @@ public class JdbcMeetingDao implements MeetingDataSource {
     @Override
     public Optional<Boolean> insert(String calId, Meeting meeting) {
         try {
-//        	PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE startTime=? AND dayOf=?;");
-//            ps.setTime(1, Time.valueOf(meeting.getStartTime()));
-//            ps.setDate(2, Date.valueOf(meeting.getDay()));
-//            ResultSet resultSet = ps.executeQuery();
-//
-//            // already present? don't insert it.
-//            while (resultSet.next()) {
-//                resultSet.close();
-//                return Optional.of(false);
-//            }
 
             PreparedStatement ps = conn.prepareStatement("INSERT INTO meetings (calId,startTime,endTime,dayOf,nameMeet,location) values(?,?,?,?,?,?);");
             ps.setString(1, calId);
@@ -112,7 +102,7 @@ public class JdbcMeetingDao implements MeetingDataSource {
             ps.setTime(3, Time.valueOf(meeting.getEndTime()));
             ps.setDate(4, Date.valueOf(meeting.getDay())); 
             ps.setString(5, meeting.getGuest());
-            if (meeting.getLocation() != null) {
+            if (meeting.getLocation() != null || (meeting.getLocation().equals("")) == false) {
                 ps.setString(6, meeting.getLocation());            	
             } else {
                 ps.setString(6, "(no location)");            	
