@@ -1,35 +1,52 @@
 package com.fermion.data.model;
 
-public class MeetingTest {
+import java.lang.reflect.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import org.junit.Test;
+import org.junit.Before;
+import static org.junit.Assert.*;
 
-//	@Test
-//	public void testMeeting() { // Constructor
-//		LocalTime start = LocalTime.of(10, 10);
-//	}
-//
-//	@Test
-//	public void testGetStartTime() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testGetEndTime() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testGetDay() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testGetGuest() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testGetLocation() {
-//		fail("Not yet implemented");
-//	}
+public class MeetingTest {
+	private Meeting meeting;
+	@Before
+	public void beforeEachTest() {
+		LocalTime start = LocalTime.of(10, 10);
+		LocalTime end = LocalTime.of(10, 20);
+		LocalDate day = LocalDate.of(2018, 11, 3);
+		String guest = "George";
+		String loc = "Fuller";
+		meeting = new Meeting(start, end, day, guest, loc);
+	}
+	
+	@Test
+	public void testMeeting() { // Constructor	
+		assertEquals(this.meeting.getClass(), Meeting.class);
+	}
+
+	@Test
+	public void testGetStartTime() {
+		assertEquals(this.meeting.getStartTime(), LocalTime.of(10, 10));
+	}
+
+	@Test
+	public void testGetEndTime() {
+		assertEquals(this.meeting.getEndTime(), LocalTime.of(10, 20));
+	}
+
+	@Test
+	public void testGetDay() {
+		assertEquals(this.meeting.getDay(), LocalDate.of(2018, 11, 3));
+	}
+
+	@Test
+	public void testGetGuest() {
+		assertEquals(this.meeting.getGuest(), "George");
+	}
+
+	@Test
+	public void testGetLocation() {
+		assertEquals(this.meeting.getLocation(), "Fuller");
+	}
 
 }
