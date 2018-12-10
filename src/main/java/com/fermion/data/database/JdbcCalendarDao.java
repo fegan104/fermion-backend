@@ -30,6 +30,10 @@ public class JdbcCalendarDao implements CalendarDataSource {
     }
 
 
+    
+    /**
+    Return the calendar with the specified calendarId, if it exists.
+    */
     @Override
     public Optional<Calendar> calendarById(String calendarId) {
         try {
@@ -57,9 +61,8 @@ public class JdbcCalendarDao implements CalendarDataSource {
 
 
     /**
-     * Experimenting with just returning calendar top level data not it's nested info.
+     * Returns a list of Calendars, without their timeslots. Used for the calendar selection page.
      *
-     * @return
      */
     @Override
     public Optional<List<Calendar>> getAll() {
@@ -85,6 +88,10 @@ public class JdbcCalendarDao implements CalendarDataSource {
         }
     }
 
+    /**
+     * Delete the Calendar with the specified name, if it exists. The timeslots and meetings of this calendar must be deleted separately.
+     *
+     */
     @Override
     public Optional<Boolean> delete(String id) {
         try {

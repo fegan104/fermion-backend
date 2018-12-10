@@ -95,6 +95,9 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
         return Optional.of(success);
     }
 
+    /**
+     * Delete every timeslot with the given calendarId, and returns true if there was no exception.
+     */
     @Override
     public Optional<Boolean> deleteByCalendar(String calendarId) {
         try {
@@ -103,7 +106,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
             int numAffected = ps.executeUpdate();
             ps.close();
 
-            return Optional.of(numAffected == 1);
+            return Optional.of(true);
 
         } catch (Exception e) {
             e.printStackTrace();

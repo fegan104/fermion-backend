@@ -27,7 +27,7 @@ public class DatabaseUtil {
     static Connection connect() throws Exception {
         if (conn != null) return conn;
 
-        Logger.log("start connecting......");
+        Logger.log("start connecting...");
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         conn = DriverManager.getConnection(

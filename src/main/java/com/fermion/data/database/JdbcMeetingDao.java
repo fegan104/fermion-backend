@@ -71,6 +71,9 @@ public class JdbcMeetingDao implements MeetingDataSource {
         }        
     }
 
+    /**
+     * Delete every meeting in the calendar specified by calendarId, and return true if no exception occurs
+     */
     @Override
     public Optional<Boolean> deleteByCalendar(String calendarId) {
         try {
@@ -79,7 +82,7 @@ public class JdbcMeetingDao implements MeetingDataSource {
             int numAffected = ps.executeUpdate();
             ps.close();
 
-            return Optional.of(numAffected == 1);
+            return Optional.of(true);
 
         } catch (Exception e) {
             e.printStackTrace();
