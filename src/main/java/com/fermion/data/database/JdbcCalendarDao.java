@@ -11,9 +11,6 @@ import java.util.*;
 
 import static java.util.stream.Collectors.groupingBy;
 
-/**
- * Created by @author frankegan on 10/31/18.
- */
 public class JdbcCalendarDao implements CalendarDataSource {
 
     Connection conn;
@@ -76,9 +73,13 @@ public class JdbcCalendarDao implements CalendarDataSource {
                 String id = calQuery.getString("id");
                 String calName = calQuery.getString("calName");
                 int duration = calQuery.getInt("duration");
-                LocalTime startHr = calQuery.getTime("startHr").toLocalTime();
-                LocalTime endHr = calQuery.getTime("endHr").toLocalTime();
-                calendars.add(new Calendar(id, calName, startHr, endHr, duration, new HashMap<>(), new HashMap<>()));
+                int startHr = calQuery.getInt("startHr");
+                int endHr = calQuery.getInt("endHr");
+
+                calendars.add(new Calendar(id, calName,
+                		LocalTime.of((int) startHr, 0, 0),
+                        LocalTime.of((int) endHr, 0, 0),
+                		duration, new HashMap<>(), new HashMap<>()));
             }
 
             calQuery.close();

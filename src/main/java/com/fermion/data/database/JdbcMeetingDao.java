@@ -12,9 +12,6 @@ import java.util.Optional;
 //SQL Meeting has calId, startTime, dayOf, nameMeet, and location.
 //Java Meeting has ID, guest, location
 
-/**
- * Created by @author frankegan on 10/31/18.
- */
 public class JdbcMeetingDao implements MeetingDataSource {
 	
 	Connection conn;
@@ -28,6 +25,9 @@ public class JdbcMeetingDao implements MeetingDataSource {
     }
 	
 	
+	/**
+	 * Returns a list of meetings that match the given calendarId
+	 */
     @Override
     public Optional<List<Meeting>> meetingsByCalendar(String calendarId) {
     	try {
@@ -53,6 +53,9 @@ public class JdbcMeetingDao implements MeetingDataSource {
 
     }
 
+    /**
+     * Delete the meeting in calendarId that matches the given date and time. Returns true if a meeting was deleted.
+     */
     @Override
     public Optional<Boolean> delete(String calendarId, LocalDate date, LocalTime time) {
         try {
@@ -95,19 +98,12 @@ public class JdbcMeetingDao implements MeetingDataSource {
         }
     }
 
+    /**
+     * Insert one meeting into the database, and return true if successful
+     */
     @Override
     public Optional<Boolean> insert(String calId, Meeting meeting) {
         try {
-//        	PreparedStatement ps = conn.prepareStatement("SELECT * FROM slots WHERE startTime=? AND dayOf=?;");
-//            ps.setTime(1, Time.valueOf(meeting.getStartTime()));
-//            ps.setDate(2, Date.valueOf(meeting.getDay()));
-//            ResultSet resultSet = ps.executeQuery();
-//
-//            // already present? don't insert it.
-//            while (resultSet.next()) {
-//                resultSet.close();
-//                return Optional.of(false);
-//            }
 
             PreparedStatement ps = conn.prepareStatement("INSERT INTO meetings (calId,startTime,endTime,dayOf,nameMeet,location) values(?,?,?,?,?,?);");
             ps.setString(1, calId);

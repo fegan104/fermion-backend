@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by @author frankegan on 10/31/18.
- */
 public class JdbcTimeslotDao implements TimeslotDataSource {
 
     Connection conn;
@@ -27,6 +24,10 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
         }
     }
 
+    
+    /**
+     * Return a list of timeslots that match the given calendarId.
+     */
     @Override
     public Optional<List<Timeslot>> getByCalendar(String calendarId) {
         try {
@@ -52,6 +53,9 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
         }
     }
 
+    /**
+     * Insert a single Timeslot into the database, and return true if successful
+     */
     @Override
     public Optional<Boolean> insert(String calId, Timeslot timeslot) {
         try {
@@ -84,6 +88,9 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
 
     }
 
+    /**
+     * Insert a list of timeslots into the database, and return true if all timeslots were added correctly
+     */
     @Override
     public Optional<Boolean> insert(String calId, List<Timeslot> timeslots) {
         boolean success = true;
@@ -115,6 +122,9 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
         }
     }
 
+    /**
+     * Delete a set of timeslots from the database, based on the input criteria (whether DayOfWeek, LocalDate, and LocalTime were given)
+     */
     @Override
     public Optional<List<Timeslot>> delete(
             String calendarId,
@@ -288,6 +298,9 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
         }
     }
 
+    /**
+     * Return a java Timeslot based on the resultSet returned from RDS
+     */
     private Timeslot generateTimeslot(ResultSet resultSet) throws Exception {
         Time startTime = resultSet.getTime("startTime");
         Time endTime = resultSet.getTime("endTime");
