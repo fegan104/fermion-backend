@@ -75,6 +75,11 @@ public class JdbcMeetingDao implements MeetingDataSource {
      * Delete every meeting in the calendar specified by calendarId, and return true if no exception occurs
      */
     @Override
+    public Optional<Boolean> delete(String calendarId, LocalDate date) {
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<Boolean> deleteByCalendar(String calendarId) {
         try {
             PreparedStatement ps = conn.prepareStatement("DELETE FROM meetings WHERE calId=?;");
