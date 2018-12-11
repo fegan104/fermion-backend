@@ -1,19 +1,22 @@
 package com.fermion.data.request;
 
+import com.google.gson.JsonArray;
+/**
+ *  Hellper for testing GetDayLambda
+ * @author ttshiz
+ *
+ */
 public class GetDayRequest {
-	/**timeslots
-	meetings
-	  public GetDayRequest (String calendarName, int startHour, int endHour, String startDate, String endDate, int duration) {
-    	this.name = calendarName;
-    	this.startHour = startHour;
-    	this.endHour = endHour;
-    	this.startDate = startDate;
-    	this.endDate = endDate;
-    	this.duration = duration;
-    }
-    
-    public String toString() {
-            return "Create(" + name + "," + startHour + "," + endHour + "," + startDate +"," + endDate +"," + duration +")";
-    }
-    */
+	JsonArray timeslots;
+	JsonArray meetings;
+	
+	public GetDayRequest () {
+		this.timeslots = new JsonArray();
+		this.meetings = new JsonArray();
+	}
+
+	public String toString() {
+		return "Create(" + timeslots + "," + meetings +")";
+	}
+
 }

@@ -1,5 +1,9 @@
 package com.fermion.data.request;
-
+/**
+ * Helper Class for Lambda Testing
+ * @author ttshiz
+ *
+ */
 public class AddCalendarRequest {
 	String name;
 	int startHour;
