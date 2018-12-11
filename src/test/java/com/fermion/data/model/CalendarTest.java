@@ -9,7 +9,11 @@ import java.util.*;
 import org.joda.time.Days;
 import org.junit.Before;
 import org.junit.Test;
-
+/**
+ * Tests calendar model object
+ * @author ttshiz
+ *
+ */
 public class CalendarTest {
 	private Calendar cal;
 	LocalDate startDate = LocalDate.of(2018, 11, 3);

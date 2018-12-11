@@ -6,7 +6,11 @@ import java.time.LocalTime;
 import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.*;
-
+/**
+ * Tests Meeting Model object
+ * @author ttshiz
+ *
+ */
 public class MeetingTest {
 	private Meeting meeting;
 	@Before

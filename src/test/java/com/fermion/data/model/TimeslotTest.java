@@ -8,7 +8,11 @@ import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.Test;
-
+/**
+ * Tests Timeslot Model Object
+ * @author ttshiz
+ *
+ */
 public class TimeslotTest {
 	private Timeslot timeslot;
 	private String id;
