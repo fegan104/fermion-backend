@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-//SQL Meeting has calId, startTime, dayOf, nameMeet, and location.
-//Java Meeting has ID, guest, location
-
 public class JdbcMeetingDao implements MeetingDataSource {
 	
 	Connection conn;

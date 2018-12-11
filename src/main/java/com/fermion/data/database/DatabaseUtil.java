@@ -6,8 +6,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DatabaseUtil {
-    // These are to be configured and NEVER stored in the code.
-    // once you retrieve this code, you can update
     public final static String rdsMySqlDatabaseUrl = "fermioncalendardb.cfxxtkssr9qe.us-east-2.rds.amazonaws.com";
     public final static String dbUsername = "fermion2018";
     public final static String dbPassword = "fermion2018";
@@ -16,7 +14,7 @@ public class DatabaseUtil {
     public final static String rdsMySqlDatabasePort = "3306";
     public final static String multiQueries = "?allowMultiQueries=true&useSSL=false";
 
-    public final static String dbName = "innodb";    // default created from MySQL WorkBench
+    public final static String dbName = "innodb";
 
     // pooled across all usages.
     static Connection conn;

@@ -55,21 +55,6 @@ public class DeleteCalendarLambdaTest {
 	public void test() {
 		DeleteCalendarLambda handler = new DeleteCalendarLambda(); 
 
-		//Test for presence before
-		/*JdbcCalendarDao calDao = new JdbcCalendarDao();
-		Optional<List<Calendar>> calList = calDao.getAll();
-		Boolean present = false;
-		if (calList.isPresent()) {
-			for (Calendar c: calList.get()) {
-				if (c.getName().equals(calendarName)){
-					present = true;
-				}
-			}
-		}
-
-		assertTrue(present); */ // reenable check when dao testing complete
-		// input parameters
-
 		// generate input
 		HashMap<String,String> prms = new HashMap<String, String>();
 		prms.put("id", calendarId);
@@ -87,17 +72,6 @@ public class DeleteCalendarLambdaTest {
 		assertTrue(body.get("id").getAsString().equals(calendarId));
 		// check for change in system?
 
-		// Test for presence after
-		/*calList = calDao.getAll();
-		 present = false;
-		if (calList.isPresent()) {
-			for (Calendar c: calList.get()) {
-				if (c.getName().equals(calendarName)){
-					present = true;
-				}
-			}
-		}
-		assertTrue(present); */ //reenable check when dao testing complete
 	}
 
 }
