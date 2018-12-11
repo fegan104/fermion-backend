@@ -1,16 +1,5 @@
 package com.fermion;
 
-import static org.junit.Assert.*;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.amazonaws.services.lambda.runtime.Context;
 import com.fermion.data.model.response.ApiGatewayResponse;
 import com.fermion.data.request.AddCalendarRequest;
@@ -18,6 +7,16 @@ import com.fermion.util.Constants;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
 /** Tests DeleteTimeslotLambda
  * 
  * @author ttshiz
@@ -40,7 +39,7 @@ public class DeleteTimeslotLambdaTest {
 		AddCalendarLambda handler = new AddCalendarLambda(); 
 		int startHour = 9;
 		int endHour = 10;
-		String startDate = LocalDate.of(2018, 12, 8).format(dtf); // need to figure out what this should be
+		String startDate = LocalDate.of(2018, 12, 8).format(dtf);
 		String endDate = LocalDate.of(2018, 12, 10).format(dtf);
 		int duration = 30;
 
