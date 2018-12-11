@@ -3,6 +3,7 @@ package com.fermion.data.request;
  * Helper Class for Lambda Testing
  * @author ttshiz
  *
+ *
  */
 public class GetMeetingRequest {
 	String startTime;
