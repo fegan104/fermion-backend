@@ -25,8 +25,7 @@ public class GetAllCalendarsTest {
 		GetAllCalendarsLambda handler = new GetAllCalendarsLambda(); // name of lambda being tested
 
 		// no input needed
-		HashMap<String, Object> input = new HashMap();
-
+		HashMap<String, Object> input = new HashMap<String, Object>();
 		ApiGatewayResponse resp = handler.handleRequest(input, createContext("add"));// fix inputs
 
 		// response value

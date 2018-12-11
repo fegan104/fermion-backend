@@ -2,7 +2,6 @@ package com.fermion;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -19,19 +18,19 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 /**
- * Tests GetCalendarByIdLambda
+ * Tests AddDayLambda
  * @author ttshiz
  *
  */
-public class GetCalendarByIdLambdaTest {
+public class AddDayLambdaTest {
 	Context createContext(String apiCall) {
 		TestContext ctx = new TestContext();
 		ctx.setFunctionName(apiCall);
 		return ctx;
 	}
-	String calendarName = "TestGetByIdLambda";
+	String calendarName = "TestAddDay";
 	String calendarId;
-	
+
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 	@Before
@@ -40,7 +39,7 @@ public class GetCalendarByIdLambdaTest {
 		int startHour = 9;
 		int endHour = 10;
 		String startDate = LocalDate.of(2018, 12, 8).format(dtf); // need to figure out what this should be
-		String endDate = LocalDate.of(2018, 12, 8).format(dtf);
+		String endDate = LocalDate.of(2018, 12, 10).format(dtf);
 		int duration = 30;
 
 		// generate input
@@ -48,10 +47,11 @@ public class GetCalendarByIdLambdaTest {
 		String ccRequest = new Gson().toJson(ar);
 		HashMap<String, Object> input = new HashMap<String, Object>();
 		input.put("body", ccRequest);
-		ApiGatewayResponse resp = handler.handleRequest(input, createContext("add")); 
+		ApiGatewayResponse resp = handler.handleRequest(input, createContext("add"));
 		JsonObject body = new JsonParser().parse((String) resp.getBody()).getAsJsonObject();
 		calendarId = body.get("id").getAsString();
 	}
+
 	@After
 	public void afterTest() {
 		DeleteCalendarLambda handler = new DeleteCalendarLambda(); 
@@ -65,21 +65,25 @@ public class GetCalendarByIdLambdaTest {
 	}
 	
 	@Test
-	public void test() throws IOException {
-		GetCalendarByIdLambda handler = new GetCalendarByIdLambda(); 
-		
-		// input parameters
+	public void test() {
+		AddDayLambda handler = new AddDayLambda(); 
+
+		// generate input	
+		String date = LocalDate.of(2018, 12, 9).format(dtf);
 		HashMap<String,String> prms = new HashMap<String, String>();
-		prms.put("id", calendarId);
+		prms.put("calendarId", calendarId);
+		prms.put("date", date);
 		HashMap<String, Object> input = new HashMap<String, Object>();
-		input.put(Constants.PATH_PARAMS, prms);
+		input.put(Constants.QUERY_STRING_PARAMS, prms);
 		
-		// run lambda
 		ApiGatewayResponse resp = handler.handleRequest(input, createContext("add"));
+
 		// check response value
-		assertEquals(200, resp.getStatusCode());
+		assertEquals(202, resp.getStatusCode());
+		
 		// check response body
 		JsonObject body = new JsonParser().parse((String) resp.getBody()).getAsJsonObject();
-		assertTrue(body.get("name").getAsString().equals(calendarName));		
+		assertTrue(body.get("day").getAsString().equals(date));
 	}
+
 }
