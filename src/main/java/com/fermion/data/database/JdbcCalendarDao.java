@@ -133,7 +133,7 @@ public class JdbcCalendarDao implements CalendarDataSource {
 
             ps = conn.prepareStatement("INSERT INTO calendars (id,ownerName,calName,startHr,endHr,duration) values(?,?,?,?,?,?);");
             ps.setString(1, calendar.getId());
-            ps.setString(2, "fermion"); //unsure how to "get owner"
+            ps.setString(2, "fermion");
             ps.setString(3, calendar.getName());
             ps.setInt(4, calendar.getStartHour().getHour());
             ps.setInt(5, calendar.getEndHour().getHour());
