@@ -213,7 +213,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
                                 "WHERE" +
                                 "  calId=?" +
                                 "  AND startTime=?" +
-                                "  OR (dayOfWeek = ? AND calId = ?);");
+                                "  AND dayOfWeek=?;");
                         psDelete = conn.prepareStatement("DELETE " + query);
                         psSelect = conn.prepareStatement("SELECT * " + query);
 
@@ -223,8 +223,6 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
                         psSelect.setTime(2, Time.valueOf(time));
                         psDelete.setString(3, dayOfWeek.toString().substring(0, 2));
                         psSelect.setString(3, dayOfWeek.toString().substring(0, 2));
-                        psDelete.setString(4, calendarId);
-                        psSelect.setString(4, calendarId);
                     }
                 } else {
                     if (time == null) { //DayOfWeek and date given, so delete all slots matching either that date or day of week (this is beyond the use cases, but our code allows it)
@@ -246,6 +244,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
                         psSelect.setString(3, dayOfWeek.toString().substring(0, 2));
                         psDelete.setString(4, calendarId);
                         psSelect.setString(4, calendarId);
+                        
                     } else { //date, time and day of week given, so delete anything matching that date+time or DayOfWeek (this is also way beyond the use cases)
                         query.append(
                                 "FROM" +
