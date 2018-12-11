@@ -141,7 +141,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
                 if (day == null) {
                     if (time == null) {
                         //No filters nothing happens...
-                    } else {
+                    } else {  //only time, so delete everything at this time
                         query.append(
                                 "FROM" +
                                 "  slots " +
@@ -157,7 +157,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
                         psSelect.setTime(2, Time.valueOf(time));
                     }
                 } else {
-                    if (time == null) {
+                    if (time == null) { //only date, so delete everything on this date
                         query.append(
                                 "FROM" +
                                 "  slots " +
@@ -171,7 +171,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
                         psSelect.setString(1, calendarId);
                         psDelete.setDate(2, Date.valueOf(day));
                         psSelect.setDate(2, Date.valueOf(day));
-                    } else {
+                    } else { //date and time, so delete a single timeslot
                         query.append(
                                 "FROM" +
                                 "  slots " +
@@ -192,7 +192,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
                 }
             } else {
                 if (day == null) {
-                    if (time == null) {
+                    if (time == null) { //only DayOfWeek, so delete everything on that day of the week
                         query.append(
                                 "FROM" +
                                 "  slots " +
@@ -206,7 +206,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
                         psSelect.setString(1, dayOfWeek.toString().substring(0, 2));
                         psDelete.setString(2, calendarId);
                         psSelect.setString(2, calendarId);
-                    } else {
+                    } else { //DayOfWeek and time given, so delete everything at that day of the week and time
                         query.append(
                                 "FROM" +
                                 "  slots " +
@@ -227,7 +227,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
                         psSelect.setString(4, calendarId);
                     }
                 } else {
-                    if (time == null) {
+                    if (time == null) { //DayOfWeek and date given, so delete all slots matching either that date or day of week (this is beyond the use cases, but our code allows it)
                         query.append(
                                 "FROM" +
                                 "  slots " +
@@ -246,7 +246,7 @@ public class JdbcTimeslotDao implements TimeslotDataSource {
                         psSelect.setString(3, dayOfWeek.toString().substring(0, 2));
                         psDelete.setString(4, calendarId);
                         psSelect.setString(4, calendarId);
-                    } else {
+                    } else { //date, time and day of week given, so delete anything matching that date+time or DayOfWeek (this is also way beyond the use cases)
                         query.append(
                                 "FROM" +
                                 "  slots " +
